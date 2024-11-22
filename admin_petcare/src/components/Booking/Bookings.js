@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Booking.css'; 
+import url from '../../ipconfig';
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -9,7 +10,7 @@ const Bookings = () => {
   // Hàm tải danh sách đặt lịch
   const loadBookings = async () => {
     try {
-      const response = await fetch('http://192.168.1.15/api/getlichhen.php');
+      const response = await fetch(`${url}/api/getlichhen.php`);
       if (!response.ok) {
         throw new Error('Lỗi khi tải danh sách đặt lịch');
       }
@@ -25,7 +26,7 @@ const Bookings = () => {
   // Hàm tìm kiếm đặt lịch
   const searchBookings = async (searchTerm) => {
     try {
-      const response = await fetch(`http://172.20.10.6/api/timkiemlichhen.php?searchTerm=${searchTerm}`);
+      const response = await fetch(`${url}/api/timkiemlichhen.php?searchTerm=${searchTerm}`);
       if (!response.ok) {
         throw new Error('Lỗi khi tìm kiếm đặt lịch');
       }
@@ -37,6 +38,35 @@ const Bookings = () => {
     }
   };
 
+  // Hàm xác nhận đặt lịch
+  const confirmBooking = async (idlichhen) => {
+    try {
+      const response = await fetch(`${url}/api/xacnhanlichhen.php`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ idlichhen }), // Gửi id lịch hẹn để xác nhận
+      });
+  
+      if (!response.ok) {
+        throw new Error('Lỗi khi xác nhận lịch hẹn');
+      }
+  
+      // Cập nhật danh sách bookings sau khi xác nhận
+      const updatedBookings = bookings.map((booking) =>
+        booking.idlichhen === idlichhen ? { ...booking, trangthai: '1' } : booking
+      );
+
+      setBookings(updatedBookings);
+      setFilteredBookings(updatedBookings); // Cập nhật danh sách sau khi xác nhận
+      alert('Lịch hẹn đã được xác nhận');
+    } catch (error) {
+      console.error('Lỗi khi xác nhận:', error);
+      alert('Không thể xác nhận lịch hẹn. Vui lòng thử lại.');
+    }
+  };
+  
   useEffect(() => {
     loadBookings();
   }, []);
@@ -73,26 +103,38 @@ const Bookings = () => {
             <thead>
               <tr>
                 <th>ID Lịch Hẹn</th>
-                <th>Tên Người Dùng</th>
-                <th>Tên Thú Cưng</th>
-                <th>Tên Dịch Vụ</th>
+                <th>ID Người Dùng</th>
+                <th>ID Thú Cưng</th>
+                <th>ID Trung Tâm</th>
+                <th>Tên Dịch Vụ</th> 
                 <th>Ngày Hẹn</th>
                 <th>Thời Gian Hẹn</th>
                 <th>Trạng Thái</th>
                 <th>Ngày Tạo</th>
+                <th>Chức Năng</th> {/* Cột chức năng */}
               </tr>
             </thead>
             <tbody>
               {filteredBookings.map((booking) => (
                 <tr key={booking.idlichhen}>
                   <td>{booking.idlichhen}</td>
-                  <td>{booking.tennguoidung}</td>
-                  <td>{booking.tenthucung}</td>
+                  <td>{booking.tennguoidung}</td>   
+                  <td>{booking.tenthucung}</td>     
+                  <td>{booking.tentrungtam}</td>      
                   <td>{booking.tendichvu}</td>
                   <td>{booking.ngayhen}</td>
                   <td>{booking.thoigianhen}</td>
-                  <td>{booking.trangthai}</td>
+                  <td>{booking.trangthai === '0' ? 'Chưa xác nhận' : 'Đã xác nhận'}</td>
                   <td>{booking.ngaytao}</td>
+                  <td>
+                    <button 
+                      onClick={() => confirmBooking(booking.idlichhen)} 
+                      className="confirm-button"
+                      style={{ backgroundColor: booking.trangthai === '1' ? 'green' : 'blue', color: 'white' }} // Thay đổi màu sắc
+                    >
+                      {booking.trangthai === '1' ? 'Đã xác nhận' : 'Xác Nhận'}
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

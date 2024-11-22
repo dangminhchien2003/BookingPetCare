@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './AddPromotions.css';
+import url from '../../ipconfig';
 
 function AddPromotion({ closeForm, onPromotionAdded }) {
   const [promotion, setPromotion] = useState({
@@ -23,7 +24,7 @@ function AddPromotion({ closeForm, onPromotionAdded }) {
     console.log("Dữ liệu gửi đi:", promotion); // Kiểm tra dữ liệu
     
     try {
-      const response = await fetch('http://192.168.1.15/api/themkhuyenmai.php', {
+      const response = await fetch(`${url}/api/themkhuyenmai.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

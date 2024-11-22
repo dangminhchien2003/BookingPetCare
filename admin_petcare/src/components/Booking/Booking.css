@@ -49,3 +49,21 @@
     border-color: #3498db;
     outline: none;
   }
+  .confirm-button {
+    background-color: #4CAF50; 
+    color: rgb(7, 6, 6);
+    
+    padding: 10px 20px;
+    
+  }
+  
+  
+  
+  .confirm-button:hover {
+    background-color: #218838;
+  }
+  
+  .confirm-button:active {
+    background-color: #1e7e34; 
+  }
+  

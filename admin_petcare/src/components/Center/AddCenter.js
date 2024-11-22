@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './AddCenter.css'; 
+import url from '../../ipconfig';
 
 function AddCenter({ closeForm, onCenterAdded }) {
   const [center, setCenter] = useState({
@@ -23,7 +24,7 @@ function AddCenter({ closeForm, onCenterAdded }) {
     console.log("Dữ liệu gửi đi:", center); // Kiểm tra dữ liệu
   
     try {
-      const response = await fetch('http://192.168.1.28/api/themtrungtam.php', {
+      const response = await fetch(`${url}/api/themtrungtam.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

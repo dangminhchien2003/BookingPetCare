@@ -1,77 +1,112 @@
 /* Đặt chiều rộng cho sidebar và định dạng các thành phần bên trong */
 .sidebar-container {
-    width: 250px;
-    background-color: #2c3e50; 
-    height: 100vh; 
-    padding-top: 20px; 
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3); /* Hiệu ứng đổ bóng */
-    transition: width 0.3s ease; /* Hiệu ứng chuyển động khi thay đổi chiều rộng */
+  width: 250px;
+  background-color: #2c3e50; 
+  height: 100vh; 
+  padding-top: 20px; 
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3); /* Hiệu ứng đổ bóng */
+  transition: width 0.3s ease; /* Hiệu ứng chuyển động khi thay đổi chiều rộng */
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  color: #e66814;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);  
+}
+
+.sidebar-logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-logo {
+  width: 40px; 
+  height: 40px; 
+  margin-right: 10px; 
+  transition: margin-right 0.3s ease;
+}
+
+.sidebar-title {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #e66814;
+  transition: opacity 0.3s ease, font-size 0.3s ease;
+}
+
+/* Định dạng các item trong sidebar */
+.sidebar-item {
+  color: #0c0c0c; 
+  padding: 15px 20px; 
+  border-radius: 10px;
+  margin: 10px 0; 
+  display: flex;
+  align-items: center;
+  text-decoration: none; 
+  transition: background-color 0.3s ease, transform 0.2s; /* Hiệu ứng hover */
+}
+
+/* Định dạng icon trong sidebar */
+.sidebar-icon {
+  color: #ecf0f1; 
+  margin-right: 1px; 
+  transition: color 0.3s ease; /* Hiệu ứng chuyển màu cho icon */
+}
+
+/* Đổi màu khi item được hover */
+.sidebar-item:hover {
+  background-color: #34495e; 
+  transform: translateX(5px); /* Di chuyển nhẹ sang phải khi hover */
+}
+
+/* Đổi màu khi item được active */
+.sidebar-item.active {
+  background-color: hsl(168, 76%, 42%); /* Màu khi item đang được chọn */
+  color: rgb(241, 151, 151);
+}
+
+/* Đổi màu icon khi item được active */
+.sidebar-icon.active {
+  color: rgb(12, 12, 12);
+}
+
+/* Responsive - tự động ẩn text và chỉ hiển thị logo khi trên thiết bị nhỏ */
+@media (max-width: 768px) {
+  .sidebar-container {
+    width: 60px; /* Thu hẹp sidebar */
   }
-  .sidebar-header {
-    color: #e66814;
-    text-align: center; 
-  }
-  
+
   .sidebar-title {
-   font-weight: bold;
-    font-size:1.2 rem; 
+    opacity: 0; /* Ẩn text */
+    font-size: 0; /* Giảm kích thước text xuống 0 */
   }
-  /* Định dạng các item trong sidebar */
+
+  .sidebar-logo {
+    margin-right: 0; /* Xóa khoảng cách bên phải của logo */
+  }
+
   .sidebar-item {
-    color: #0c0c0c; 
-    padding: 15px 20px; 
-    border-radius: 10px;
-    margin: 10px 0; 
-    display: flex;
-    align-items: center;
-    text-decoration: none; 
-    transition: background-color 0.3s ease, transform 0.2s; /* Hiệu ứng hover */
+    justify-content: center; /* Canh giữa icon */
   }
-  
-  /* Định dạng icon trong sidebar */
-  .sidebar-icon {
-    color: #ecf0f1; 
-    margin-right: 15px; 
-    transition: color 0.3s ease; /* Hiệu ứng chuyển màu cho icon */
+
+  .sidebar-item .MuiListItemText-root {
+    display: none; /* Ẩn text của các mục */
   }
-  
-  /* Đổi màu khi item được hover */
-  .sidebar-item:hover {
-    background-color: #34495e; 
-    transform: translateX(5px); /* Di chuyển nhẹ sang phải khi hover */
-  }
-  
-  /* Đổi màu khi item được active */
-  .sidebar-item.active {
-    background-color: hsl(168, 76%, 42%); /* Màu khi item đang được chọn */
-    color: rgb(241, 151, 151);
-  }
-  
-  /* Đổi màu icon khi item được active */
-  .sidebar-icon.active {
-    color: rgb(12, 12, 12);
-  }
-  
-  /* Định dạng tiêu đề sidebar */
-  .sidebar-container h1 {
-    color: #ecf0f1; 
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 1.5rem; 
-  }
-  
-  /* Responsive - tự động ẩn sidebar khi trên thiết bị nhỏ */
-  @media (max-width: 768px) {
-    .sidebar-container {
-      width: 60px; /* Thu hẹp sidebar */
-    }
-  
-    .sidebar-item {
-      justify-content: center; /* Canh giữa icon */
-    }
-  
-    .sidebar-item .MuiListItemText-root {
-      display: none; /* Ẩn text khi trên thiết bị nhỏ */
-    }
-  }
-  
+}
+
+.logout-button {
+  background-color: #f44336; /* Màu nút Đăng xuất */
+  color: white;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #d32f2f;
+}
+
+.logout-icon {
+  color: white;
+}

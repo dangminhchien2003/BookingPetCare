@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, FlatList, Text, StyleSheet, ActivityIndicator, Image, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import url from '../../ipconfig';
 
 const SearchScreen = ({ navigation }) => {
   const [query, setQuery] = useState('');
@@ -14,30 +16,35 @@ const SearchScreen = ({ navigation }) => {
     setError(null); // Đặt lại lỗi trước khi gọi API
   
     try {
-      const response = await fetch(`http://192.168.1.15/api/timkiemdv_tt.php?searchTerm=${encodeURIComponent(query)}`);
+      const response = await fetch(`${url}/api/timkiemdv_tt.php?searchTerm=${encodeURIComponent(query)}`);
       const data = await response.json();
   
       console.log('API Response:', data); // Thêm log để kiểm tra dữ liệu
   
       const combinedResults = [
         ...data.services.map(service => ({
-          id: service.iddichvu, // Sử dụng iddichvu
-          name: service.tendichvu, // Sử dụng tendichvu
+          id: service.iddichvu,
+          name: service.tendichvu,
           type: 'service',
-          image: service.hinhanh, // Lưu hình ảnh cho dịch vụ
-          price: service.gia, // Lưu giá cho dịch vụ
+          image: service.hinhanh,
+          price: service.gia,
           mota: service.mota,
-          time: service.thoigianthuchien, // Thêm thời gian thực hiện
+          time: service.thoigianthuchien,
         })),
         ...data.centers.map(center => ({
-          id: center.idtrungtam, // Sử dụng idtrungtam
-          name: center.tentrungtam, // Sử dụng tentrungtam
+          id: center.idtrungtam,
+          name: center.tentrungtam,
           type: 'center',
-          image: center.hinhanh, // Lưu hình ảnh cho trung tâm
+          image: center.hinhanh,
+          diachi: center.diachi,
+          sodienthoai: center.sodienthoai,
+          email: center.email,
+          X_location: center.X_location,
+          Y_location: center.Y_location,
+          mota: center.mota,
         }))
       ];
   
-      // Loại bỏ các mục không có id
       const validResults = combinedResults.filter(item => item.id !== undefined);
       setResults(validResults);
     } catch (err) {
@@ -46,15 +53,33 @@ const SearchScreen = ({ navigation }) => {
       setLoading(false);
     }
   };
-  
+
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.resultItem}
       onPress={() => {
         if (item.type === 'service') {
-          navigation.navigate('ServiceDetailSreen', { service: item }); // Truyền item chứa cả mota
+          navigation.navigate('ServiceDetails', { 
+            tenDichVu: item.name,
+            hinhAnhDichVu: item.image,
+            moTaDichVu: item.mota,
+            giaDichVu: item.price,
+            thoiGianThucHien: item.time
+          });
         } else if (item.type === 'center') {
-          navigation.navigate('CenterDetailScreen', { center: item }); // Truyền item cho trung tâm
+          navigation.navigate('CenterDetails', { 
+            center: {
+              idtrungtam: item.id,
+              tentrungtam: item.name,
+              hinhanh: item.image,
+              diachi: item.diachi,
+              sodienthoai: item.sodienthoai,
+              email: item.email,
+              X_location: item.X_location,
+              Y_location: item.Y_location,
+              mota: item.mota,
+            }
+          }); 
         }
       }}
       key={`${item.id}-${item.type}`} // Sử dụng id kết hợp với type để tạo key duy nhất
@@ -65,21 +90,51 @@ const SearchScreen = ({ navigation }) => {
           {item.name} ({item.type === 'service' ? 'Dịch vụ' : 'Trung tâm'})
         </Text>
         {item.type === 'service' && (
-          <>
-            <Text style={styles.productPrice}>{formatPrice(item.price)} VND</Text>
-            <Text style={styles.productTime}>Thời gian thực hiện: {item.time ? item.time : 'Chưa có'}</Text>
-          </>
-        )}
+            <>
+              <View style={styles.infoRow}>
+                <Icon name="money" size={16} color="#f9b233" style={styles.iconStyle} />
+                <Text style={styles.productPrice}>{formatPrice(item.price)} VND</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Icon name="clock-o" size={16} color="#f9b233" style={styles.iconStyle} />
+                <Text style={styles.productTime}>{item.time ? item.time : 'Chưa có'}</Text>
+              </View>
+            </>
+          )}
+
+          {item.type === 'center' && (
+            <>
+              <View style={styles.infoRow}>
+                <Icon name="map-marker" size={16} color="#f9b233" style={styles.iconStyle} />
+                <Text style={styles.centerAddress}>{item.diachi}</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Icon name="phone" size={16} color="#f9b233" style={styles.iconStyle} />
+                <Text style={styles.centerPhone}>{item.sodienthoai}</Text>
+              </View>
+            </>
+          )}
+
       </View>
     </TouchableOpacity>
   );
-  
+
   const formatPrice = (Gia) => {
     return Gia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backIcon}
+          onPress={() => navigation.goBack()}
+        >
+          <Icon name="arrow-left" size={24} color="#333" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Tìm kiếm</Text>
+      </View>
+
       <TextInput
         style={styles.searchInput}
         placeholder="Tìm kiếm dịch vụ hoặc trung tâm..."
@@ -92,12 +147,15 @@ const SearchScreen = ({ navigation }) => {
       {loading && <ActivityIndicator size="large" color="#0000ff" />}
       {error && <Text style={styles.errorText}>{error}</Text>}
       {results.length === 0 && !loading && (
-        <Text style={styles.noResultsText}>Không có kết quả nào được tìm thấy.</Text>
+        <Text style={styles.noResultsText}>
+          Không có kết quả nào được tìm thấy.
+        </Text>
       )}
-      {/* Hiển thị hình ảnh thú cưng nếu chưa tìm kiếm */}
-      {query === '' && (
-        <Image 
-          source={{ uri: 'https://png.pngtree.com/png-clipart/20231208/original/pngtree-dog-and-cat-cartoon-illustration-vector-png-image_13797203.png' }} // Thay đổi URL thành hình ảnh thú cưng của bạn
+      {query === "" && (
+        <Image
+          source={{
+            uri: "https://png.pngtree.com/png-clipart/20231208/original/pngtree-dog-and-cat-cartoon-illustration-vector-png-image_13797203.png",
+          }}
           style={styles.petImage}
         />
       )}
@@ -116,6 +174,23 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#f9f9f9',
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    marginBottom: 16,
+  },
+  backIcon: {
+    paddingHorizontal: 10,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    flex: 1, 
+    marginRight: 40, 
+  },
+  
   searchInput: {
     height: 50,
     borderColor: '#f9b233',
@@ -131,7 +206,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
    searchButton: {
-    backgroundColor: '#f9b233', // Màu vàng chủ đạo
+    backgroundColor: '#f9b233',
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
@@ -140,7 +215,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 2,
-    elevation: 3, // Thêm độ nổi cho button
+    elevation: 3,
   },
   searchButtonText: {
     color: '#fff',
@@ -176,12 +251,21 @@ const styles = StyleSheet.create({
   },
   productPrice: {
     fontSize: 16,
-    color: 'green',
+    color: '#f9b233',
   },
   productTime: {
     fontSize: 14,
     color: '#555',
   },
+  iconStyle: {
+    marginRight: 8,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 2,
+  },
+  
   errorText: {
     color: 'red',
     marginVertical: 10,
@@ -200,7 +284,6 @@ const styles = StyleSheet.create({
     marginTop: 50,
     marginLeft: 40,
     resizeMode: 'cover', 
-    textAlign: 'center'
   },
 });
 

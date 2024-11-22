@@ -3,6 +3,7 @@ import AddService from './AddService';
 import EditService from './EditService';
 import './Services.css'; 
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import url from '../../ipconfig';
 
 function Services() {
   const [services, setServices] = useState([]);
@@ -14,7 +15,7 @@ function Services() {
 
   const loadServices = async () => {
     try {
-      const response = await fetch('http://192.168.1.15/api/getdichvu.php');
+      const response = await fetch(`${url}/api/getdichvu.php`);
       if (!response.ok) {
         throw new Error('Lỗi khi tải dữ liệu');
       }
@@ -30,7 +31,7 @@ function Services() {
   // Hàm tìm kiếm dịch vụ
   const searchServices = async (searchTerm) => {
     try {
-      const response = await fetch(`http://192.168.1.15/api/timkiemdichvu.php?searchTerm=${searchTerm}`);
+      const response = await fetch(`${url}/api/timkiemdichvu.php?searchTerm=${searchTerm}`);
       if (!response.ok) {
         throw new Error('Lỗi khi tìm kiếm người dùng');
       }
@@ -63,7 +64,7 @@ function Services() {
     const confirmDelete = window.confirm("Bạn có muốn xóa dịch vụ này không?");
     if (confirmDelete) {
       try {
-        const response = await fetch(`http://192.168.1.15/api/xoadichvu.php?id=${id}`, {
+        const response = await fetch(`${url}/api/xoadichvu.php?id=${id}`, {
           method: 'DELETE',
         });
 

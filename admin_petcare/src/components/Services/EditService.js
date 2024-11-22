@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './EditService.css';
+import url from '../../ipconfig';
 
 function EditService({ serviceToEdit, closeForm, onServiceUpdated }) {
   const [service, setService] = useState(serviceToEdit); // Khởi tạo state service từ serviceToEdit
@@ -18,7 +19,7 @@ function EditService({ serviceToEdit, closeForm, onServiceUpdated }) {
     e.preventDefault();
     try {
       // Gọi API PHP để cập nhật dịch vụ
-      const response = await fetch('http://192.168.1.28/api/suadichvu.php', {
+      const response = await fetch(`${url}/api/suadichvu.php`, {
         method: 'POST', // Hoặc 'PUT' tùy thuộc vào API của bạn
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

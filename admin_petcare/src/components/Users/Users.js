@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import './Users.css'; 
-import AddUser from './AddUser'; // Đường dẫn đến file AddUser.js
-import EditUser from './EditUser'; // Đường dẫn đến file EditUser.js
+import AddUser from './AddUser';
+import EditUser from './EditUser'; 
+import url from '../../ipconfig';
 
 const Users = () => {
   const [user, setUser] = useState([]);
@@ -15,7 +16,7 @@ const Users = () => {
   // Load danh sách người dùng
   const loadUser = async () => {
     try {
-      const response = await fetch('http://192.168.1.15/api/getnguoidung.php');
+      const response = await fetch(`${url}/api/getnguoidung.php`);
       if (!response.ok) {
         throw new Error('Lỗi khi tải dữ liệu');
       }
@@ -36,7 +37,7 @@ const Users = () => {
   // Hàm tìm kiếm người dùng
   const searchUsers = async (searchTerm) => {
     try {
-      const response = await fetch(`http://192.168.1.15/api/timkiemnguoidung.php?searchTerm=${searchTerm}`);
+      const response = await fetch(`${url}/api/timkiemnguoidung.php?searchTerm=${searchTerm}`);
       if (!response.ok) {
         throw new Error('Lỗi khi tìm kiếm người dùng');
       }
@@ -72,7 +73,7 @@ const Users = () => {
     const confirmDelete = window.confirm("Bạn có muốn xóa người dùng này không?");
     if (confirmDelete) {
       try {
-        const response = await fetch(`http://192.168.1.15/api/xoanguoidung.php?id=${id}`, { 
+        const response = await fetch(`${url}/api/xoanguoidung.php?id=${id}`, { 
           method: 'DELETE',
         });
 

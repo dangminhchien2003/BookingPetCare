@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'rea
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import url from '../../ipconfig';
 
 const HomeScreen = ({ navigation }) => {
   const [dichvu, setDichvu] = useState([]);
@@ -12,7 +13,7 @@ const HomeScreen = ({ navigation }) => {
 
   // Lấy danh sách dịch vụ
   useEffect(() => {
-    axios.get('http://192.168.1.15/api/dichvu.php')
+    axios.get(`${url}api/dichvu.php`)
       .then(response => {
         setDichvu(response.data);
         setFilteredDichvu(response.data);
@@ -24,7 +25,7 @@ const HomeScreen = ({ navigation }) => {
 
   // Lấy danh sách trung tâm
   useEffect(() => {
-    axios.get('http://192.168.1.15/api/trungtam.php')
+    axios.get(`${url}api/trungtam.php`)
       .then(response => {
         setCenters(response.data);
       })
@@ -37,9 +38,11 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     const getUser = async () => {
         try {
-            const username = await AsyncStorage.getItem('username'); // Lấy tên người dùng
-            if (username) {
-                setUser(username); // Cập nhật trạng thái tên người dùng
+            const userString = await AsyncStorage.getItem('user'); // Lấy chuỗi JSON từ AsyncStorage
+            if (userString) {
+                const userObject = JSON.parse(userString); // Chuyển đổi chuỗi JSON thành đối tượng
+                console.log('Fetched user object:', userObject);
+                setUser(userObject.tennguoidung); // Cập nhật tên người dùng từ đối tượng
             }
         } catch (error) {
             console.error('Lỗi khi lấy tên người dùng:', error);
@@ -84,12 +87,13 @@ const HomeScreen = ({ navigation }) => {
                 key={dichvu.iddichvu}
                 style={styles.serviceCard} 
                 onPress={() => navigation.navigate('ServiceDetails', {
-                  serviceTitle: dichvu.tendichvu,
-                  serviceImage: dichvu.hinhanh,
-                  serviceDescription: dichvu.mota,
-                  servicePrice: dichvu.gia, 
-                  serviceTime: dichvu.thoigianthuchien, 
+                  tenDichVu: dichvu.tendichvu,
+                  hinhAnhDichVu: dichvu.hinhanh,
+                  moTaDichVu: dichvu.mota,
+                  giaDichVu: dichvu.gia, 
+                  thoiGianThucHien: dichvu.thoigianthuchien,
                 })}
+                
               >
                 <Image 
                   style={styles.serviceImage} 
@@ -140,7 +144,7 @@ const HomeScreen = ({ navigation }) => {
 
       {/* Bottom Navigation */}
       <View style={styles.bottomNavigation}>
-        <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <Ionicons name="home-outline" size={24} color="black" style={styles.bottomIcon} />
           <Text style={styles.bottomText}>Trang chủ</Text>
         </TouchableOpacity>
@@ -148,7 +152,7 @@ const HomeScreen = ({ navigation }) => {
           <Ionicons name="search-outline" size={24} color="black" style={styles.bottomIcon} />
           <Text style={styles.bottomText}>Tìm kiếm</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+        <TouchableOpacity onPress={() => navigation.navigate('BookingListScreen')}>
           <Ionicons name="calendar-outline" size={24} color="black" style={styles.bottomIcon} />
           <Text style={styles.bottomText}>Lịch hẹn</Text>
         </TouchableOpacity>
@@ -165,6 +169,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingTop: 40
   },
   header: {
     flexDirection: 'row',
@@ -186,7 +191,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   welcomeText: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 'bold',
     color: 'black',
   },

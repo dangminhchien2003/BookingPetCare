@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './EditCenter.css';
+import url from '../../ipconfig';
 
 function EditCenter({ CenterToEdit, closeForm, onCenterUpdated }) {
   const [center, setCenter] = useState(CenterToEdit); // Khởi tạo state center từ CenterToEdit
@@ -18,7 +19,7 @@ function EditCenter({ CenterToEdit, closeForm, onCenterUpdated }) {
     e.preventDefault();
     try {
       // Gọi API PHP để cập nhật trung tâm
-      const response = await fetch('http://192.168.1.15/api/suatrungtam.php', {
+      const response = await fetch(`${url}/api/suatrungtam.php`, {
         method: 'POST', 
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

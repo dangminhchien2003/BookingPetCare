@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, Alert } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';  
+import url from '../../ipconfig';
 
 const SignUpScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -8,6 +10,9 @@ const SignUpScreen = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [address, setAddress] = useState('');
+  
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSignUp = async () => {
     if (password !== confirmPassword) {
@@ -15,7 +20,6 @@ const SignUpScreen = ({ navigation }) => {
       return;
     }
 
-    // Chuẩn bị dữ liệu để gửi đến API
     const formData = {
       tennguoidung: name,
       email: email,
@@ -25,8 +29,7 @@ const SignUpScreen = ({ navigation }) => {
     };
 
     try {
-      // Gửi yêu cầu API
-      const response = await fetch('http://192.168.1.28/api/dangky.php', {
+      const response = await fetch(`${url}/api/dangky.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,10 +39,8 @@ const SignUpScreen = ({ navigation }) => {
 
       const result = await response.json();
 
-      // Xử lý phản hồi từ máy chủ
       if (result.success) {
         Alert.alert("Thành công", result.message);
-        // Chuyển đến màn hình đăng nhập sau khi đăng ký thành công
         navigation.navigate('Login');
       } else {
         Alert.alert("Lỗi", result.message);
@@ -52,7 +53,6 @@ const SignUpScreen = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Logo */}
       <View style={styles.logoContainer}>
         <Image 
           source={{ uri: 'https://www.mdanderson.org/images/publications/cancerwise/Generics/Pet%20Owners%20and%20Cancer%20Treatment.jpg' }} 
@@ -61,58 +61,93 @@ const SignUpScreen = ({ navigation }) => {
         <Text style={styles.title}>Booking PetCare</Text>
       </View>
 
-      {/* Form nhập thông tin */}
       <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Họ và tên"
-          value={name}
-          onChangeText={setName}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Số điện thoại"
-          value={phoneNumber}
-          onChangeText={setPhoneNumber}
-          keyboardType="phone-pad"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Địa chỉ"
-          value={address}
-          onChangeText={setAddress}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Mật khẩu"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Xác nhận mật khẩu"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-        />
+        <View style={styles.inputWrapper}>
+          <Icon name="user" size={20} color="#f9b233" style={styles.icon} />
+          <TextInput
+            style={styles.input}
+            placeholder="Họ và tên"
+            value={name}
+            onChangeText={setName}
+          />
+        </View>
+        <View style={styles.inputWrapper}>
+          <Icon name="envelope" size={20} color="#f9b233" style={styles.icon} />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+        </View>
+        <View style={styles.inputWrapper}>
+          <Icon name="phone" size={20} color="#f9b233" style={styles.icon} />
+          <TextInput
+            style={styles.input}
+            placeholder="Số điện thoại"
+            value={phoneNumber}
+            onChangeText={setPhoneNumber}
+            keyboardType="phone-pad"
+          />
+        </View>
+        <View style={styles.inputWrapper}>
+          <Icon name="map-marker" size={20} color="#f9b233" style={styles.icon} />
+          <TextInput
+            style={styles.input}
+            placeholder="Địa chỉ"
+            value={address}
+            onChangeText={setAddress}
+          />
+        </View>
+
+        {/* Mật khẩu */}
+        <View style={styles.inputWrapper}>
+          <Icon name="lock" size={20} color="#f9b233" style={styles.icon} />
+          <TextInput
+            style={styles.input}
+            placeholder="Mật khẩu"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+          />
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+            <Icon
+              name={showPassword ? "eye" : "eye-slash"}
+              size={20}
+              color="#f9b233"
+              style={styles.eyeIcon}
+            />
+          </TouchableOpacity>
+        </View>
+
+        {/* Xác nhận mật khẩu */}
+        <View style={styles.inputWrapper}>
+          <Icon name="lock" size={20} color="#f9b233" style={styles.icon} />
+          <TextInput
+            style={styles.input}
+            placeholder="Xác nhận mật khẩu"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry={!showConfirmPassword}
+          />
+          <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+            <Icon
+              name={showConfirmPassword ? "eye" : "eye-slash"}
+              size={20}
+              color="#f9b233"
+              style={styles.eyeIcon}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
 
-      {/* Nút Đăng ký */}
       <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
         <Text style={styles.signUpButtonText}>Đăng ký</Text>
       </TouchableOpacity>
 
-      {/* Liên kết quay lại Đăng nhập */}
-      <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
         <Text style={styles.backToLoginText}>Đã có tài khoản? Đăng nhập ngay</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -150,9 +185,10 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: '100%',
   },
-  input: {
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
     width: '100%',
-    height: 50,
     backgroundColor: '#fff',
     borderRadius: 12,
     paddingHorizontal: 15,
@@ -165,6 +201,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,
+  },
+  icon: {
+    marginRight: 10,
+  },
+  input: {
+    flex: 1,
+    height: 50,
+  },
+  eyeIcon: {
+    padding: 5,
   },
   signUpButton: {
     backgroundColor: '#f9b233',

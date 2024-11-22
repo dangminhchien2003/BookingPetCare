@@ -3,6 +3,7 @@ import './Center.css';
 import AddCenter from './AddCenter';
 import EditCenter from './EditCenter';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import url from '../../ipconfig';
 
 const Center = () => {
   const [centers, setCenters] = useState([]); // Tạo state để lưu danh sách trung tâm
@@ -16,7 +17,7 @@ const Center = () => {
   // Hàm load danh sách trung tâm từ API
   const loadCenters = async () => {
     try {
-      const response = await fetch('http://192.168.1.15/api/gettrungtam.php'); // Đường dẫn đến file PHP API
+      const response = await fetch(`${url}/api/gettrungtam.php`); // Đường dẫn đến file PHP API
       if (!response.ok) {
         throw new Error('Lỗi khi tải danh sách trung tâm');
       }
@@ -31,7 +32,7 @@ const Center = () => {
    // Hàm tìm kiếm dịch vụ
    const searchCenter = async (searchTerm) => {
     try {
-      const response = await fetch(`http://192.168.1.15/api/timkiemtrungtam.php?searchTerm=${searchTerm}`);
+      const response = await fetch(`${url}/api/timkiemtrungtam.php?searchTerm=${searchTerm}`);
       if (!response.ok) {
         throw new Error('Lỗi khi tìm kiếm người dùng');
       }
@@ -64,7 +65,7 @@ const Center = () => {
     const confirmDelete = window.confirm("Bạn có muốn xóa trung tâm này không?");
     if (confirmDelete) {
       try {
-        const response = await fetch(`http://192.168.1.15/api/xoatrungtam.php?id=${id}`, {
+        const response = await fetch(`${url}/api/xoatrungtam.php?id=${id}`, {
           method: 'DELETE',
         });
 

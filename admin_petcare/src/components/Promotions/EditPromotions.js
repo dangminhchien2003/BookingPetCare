@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 // import './EditPromotion.css';
+import url from '../../ipconfig';
 
 function EditPromotion({ promotionToEdit, closeForm, onPromotionUpdated }) {
   const [promotion, setPromotion] = useState(promotionToEdit); // Khởi tạo với khuyến mãi được chỉnh sửa
@@ -22,7 +23,7 @@ function EditPromotion({ promotionToEdit, closeForm, onPromotionUpdated }) {
 
     try {
       // Gọi API PHP để cập nhật khuyến mãi
-      const response = await fetch('http://192.168.1.15/api/suakhuyenmai.php', {
+      const response = await fetch(`${url}/api/suakhuyenmai.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

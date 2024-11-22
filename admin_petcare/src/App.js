@@ -8,9 +8,9 @@ import Users from "./components/Users/Users";
 import Bookings from "./components/Booking/Bookings";
 import Center from "./components/Center/Center";
 import Login from "./components/Login/Login";
-import Signup from "./components/Signup/Signup";
 import Promotions from "./components/Promotions/Promotions";
 import Setting from "./components/Setting/Setting";
+import ServiceCenter from "./components/Services_Center/ServiceCenter";
 
 import { Box } from "@mui/material";
 import "./App.css";
@@ -25,8 +25,7 @@ function App() {
 
           {/* Định nghĩa các đường dẫn cho trang đăng nhập và đăng ký - nằm ngoài AppGlass */}
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-
+         
           {/* Các trang sau khi đăng nhập sẽ nằm trong AppGlass */}
           <Route
             path="*"
@@ -40,6 +39,7 @@ function App() {
                     <Route path="/users" element={<Users />} />
                     <Route path="/bookings" element={<Bookings />} />
                     <Route path="/center" element={<Center />} />
+                    <Route path="/ServiceCenter" element={<ServiceCenter />} />
                     <Route path="/promotions" element={<Promotions/>} />
                     <Route path="/setting" element={<Setting />} />
                   </Routes>

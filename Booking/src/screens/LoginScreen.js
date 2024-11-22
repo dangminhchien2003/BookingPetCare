@@ -1,49 +1,54 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import url from '../../ipconfig';
+import Icon from 'react-native-vector-icons/MaterialIcons';  
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);  
 
   const handleLogin = async () => {
     if (!email || !password) {
-        Alert.alert('Lỗi', 'Vui lòng nhập đầy đủ thông tin');
-        return;
+      Alert.alert('Lỗi', 'Vui lòng nhập đầy đủ thông tin');
+      return;
     }
 
     try {
-        // Gửi yêu cầu POST tới API
-        const response = await fetch('http://192.168.1.15/api/dangnhap.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `email=${encodeURIComponent(email)}&matkhau=${encodeURIComponent(password)}`,
-        });
+      const response = await fetch(`${url}api/dangnhap.php`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `email=${encodeURIComponent(email)}&matkhau=${encodeURIComponent(password)}`,
+      });
 
-        const json = await response.json();
+      const json = await response.json();
+      console.log('Phản hồi từ API:', json);
 
-        // Xử lý kết quả từ API
-        if (json.success) {
-            Alert.alert('Thành công', 'Đăng nhập thành công');
+      if (json.success) {
+        Alert.alert('Thành công', 'Đăng nhập thành công');
 
-            // Lưu thông tin người dùng vào AsyncStorage
-            const userInfo = JSON.stringify(json.user); // Chuyển đổi thông tin người dùng thành chuỗi JSON
-            await AsyncStorage.setItem('user', userInfo);
-            await AsyncStorage.setItem('username', json.user.tennguoidung); // Lưu tên người dùng
+        // Save user info from response
+        const userInfo = {
+          idnguoidung: json.user.idnguoidung,
+          tennguoidung: json.user.tennguoidung,
+          email: json.user.email,
+          diachi: json.user.diachi,
+          sodienthoai: json.user.sodienthoai,
+        };
+        await AsyncStorage.setItem('user', JSON.stringify(userInfo));
 
-            // Chuyển đến màn hình Home nếu đăng nhập thành công
-            navigation.navigate('Home');
-        } else {
-            Alert.alert('Thất bại', json.message || 'Email hoặc mật khẩu không đúng');
-        }
+        navigation.navigate('Home');
+      } else {
+        Alert.alert('Thất bại', json.message || 'Email hoặc mật khẩu không đúng');
+      }
     } catch (error) {
-        Alert.alert('Lỗi', 'Đã xảy ra lỗi khi kết nối đến API');
-        console.error(error);
+      Alert.alert('Lỗi', 'Đã xảy ra lỗi khi kết nối đến API');
+      console.error(error);
     }
-};
-
+  };
 
   const handleGoogleLogin = () => {
     console.log('Login with Google');
@@ -66,21 +71,39 @@ const LoginScreen = ({ navigation }) => {
 
       {/* Form Input */}
       <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Mật khẩu"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+        {/* Email Input */}
+        <View style={styles.inputWithIcon}>
+          <Icon name="email" size={24} color="#f9b233" style={styles.inputIcon} />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+        </View>
+
+        {/* Password Input */}
+        <View style={styles.passwordContainer}>
+          <View style={styles.inputWithIcon}>
+            <Icon name="lock" size={24} color="#f9b233" style={styles.inputIcon} />
+            <TextInput
+              style={styles.input}
+              placeholder="Mật khẩu"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!isPasswordVisible}
+            />
+          </View>
+          {/* Eye Icon */}
+          <TouchableOpacity 
+            style={styles.eyeIcon} 
+            onPress={() => setIsPasswordVisible(!isPasswordVisible)} // Toggle password visibility
+          >
+            <Icon name={isPasswordVisible ? 'visibility' : 'visibility-off'} size={24} color="#f9b233" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Login Button */}
@@ -146,14 +169,30 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: '100%',
   },
-  input: {
-    width: '100%',
-    height: 50,
+  inputWithIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#f2f2f2',
+    height: 50,
     borderRadius: 8,
-    paddingHorizontal: 15,
     marginBottom: 15,
+  },
+  inputIcon: {
+    marginLeft: 15,
+  },
+  input: {
+    width: '80%',
+    height: '100%',
+    paddingLeft: 10,
     fontSize: 16,
+  },
+  passwordContainer: {
+    position: 'relative',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 15,
+    top: 12,
   },
   loginButton: {
     backgroundColor: '#f9b233',

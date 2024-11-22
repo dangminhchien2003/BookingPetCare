@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './AddUser.css';
+import url from '../../ipconfig';
 
 function AddUser({ closeForm, onUserAdded }) {
   const [user, setUser] = useState({
@@ -22,7 +23,7 @@ function AddUser({ closeForm, onUserAdded }) {
     console.log("Dữ liệu gửi đi:", user); // Kiểm tra dữ liệu
   
     try {
-      const response = await fetch('http://192.168.1.28/api/themnguoidung.php', {
+      const response = await fetch(`${url}/api/themnguoidung.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -43,7 +43,7 @@ const Dashboard = () => {
 
   return (
     <div id="dashboard" className="content-section">
-      <h2>Dashboard</h2>
+      <h2>Tổng quan</h2>
 
       {/* Khu vực hiển thị 4 thẻ (card) */}
       <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>

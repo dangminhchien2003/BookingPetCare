@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './AddServices.css'; 
+import url from '../../ipconfig';
 
 function AddService({ closeForm, onServiceAdded }) {
   const [service, setService] = useState({
@@ -21,7 +22,7 @@ function AddService({ closeForm, onServiceAdded }) {
     console.log("Dữ liệu gửi đi:", service); // Kiểm tra dữ liệu
   
     try {
-      const response = await fetch('http://192.168.1.28/api/themdichvu.php', {
+      const response = await fetch(`${url}/api/themdichvu.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

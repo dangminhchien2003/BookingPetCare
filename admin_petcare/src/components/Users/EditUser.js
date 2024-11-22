@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 // import './EditService.css';
+import url from '../../ipconfig';
 
 function EditUser({ userToEdit, closeForm, onUserUpdated }) {
   const [user, setUser] = useState(userToEdit); // Khởi tạo state user từ userToEdit
@@ -18,7 +19,7 @@ function EditUser({ userToEdit, closeForm, onUserUpdated }) {
     e.preventDefault();
     try {
       // Gọi API PHP để cập nhật nguoi dung
-      const response = await fetch('http://192.168.1.16/api/suanguoidung.php', {
+      const response = await fetch(`${url}/api/suanguoidung.php`, {
         method: 'POST', 
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

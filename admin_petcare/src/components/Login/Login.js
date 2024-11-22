@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import petcareImage from "../../assets/images/petlogo.avif"; 
+import url from "../../ipconfig";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -12,8 +13,19 @@ const AdminLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     
+    // Kiểm tra ngoại lệ
+    if (!email.includes("@") || !email.includes(".")) {
+      setError("Email không hợp lệ. Vui lòng nhập email đúng định dạng.");
+      return;
+    }
+  
+    if (password.length < 6) {
+      setError("Mật khẩu phải có ít nhất 6 ký tự.");
+      return;
+    }
+  
     try {
-      const response = await fetch("http://192.168.1.15/api/admin_dangnhap.php", {
+      const response = await fetch(`${url}/api/admin_dangnhap.php`, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -45,6 +57,7 @@ const AdminLogin = () => {
       setError("Đã xảy ra lỗi trong quá trình đăng nhập, vui lòng thử lại sau.");
     }
   };
+  
 
   return (
     <div className="login-page">

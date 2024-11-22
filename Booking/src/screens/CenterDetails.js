@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, FlatList }
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MapView, { Marker } from 'react-native-maps'; // Nhập MapView và Marker
+import url from '../../ipconfig';
 
 const CenterDetails = ({ route, navigation }) => {
   const { center } = route.params;
@@ -12,7 +13,7 @@ const CenterDetails = ({ route, navigation }) => {
     console.log('Thông tin trung tâm:', center); 
     const fetchServices = async () => {
       try {
-        const response = await axios.get(`http://192.168.1.15/api/getdichvu_trungtam.php?idtrungtam=${center.idtrungtam}`);
+        const response = await axios.get(`${url}/api/getdichvu_trungtam.php?idtrungtam=${center.idtrungtam}`);
         console.log(response.data);
         setServices(response.data);
       } catch (error) {

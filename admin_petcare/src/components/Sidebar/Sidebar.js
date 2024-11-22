@@ -1,4 +1,5 @@
 import React from "react";
+import logoPet from "../../assets/images/petlogo.avif";
 import {
   List,
   ListItem,
@@ -21,47 +22,66 @@ const Sidebar = () => {
   const location = useLocation();
 
   const items = [
-    { text: "Dashboard", icon: <DashboardIcon />, link: "/dashboard" },
+    { text: "Tổng quan", icon: <DashboardIcon />, link: "/dashboard" },
     { text: "Người dùng", icon: <PersonIcon />, link: "/Users" },
     { text: "Dịch vụ", icon: <RoomServiceIcon />, link: "/Services" },
     { text: "Trung tâm", icon: <MapsHomeWorkIcon />, link: "/center" },
+    { text: "Dịch vụ-Trung tâm", icon: <SettingsIcon />, link: "/ServiceCenter" },
     { text: "Khuyến mãi", icon: <LoyaltyIcon />, link: "/Promotions" },
     { text: "Lịch hẹn", icon: <EventNoteIcon />, link: "/Bookings" }, 
     { text: "Cài đặt", icon: <SettingsIcon />, link: "/setting" },
     { text: "Đăng xuất", icon: <LogoutIcon />, link: "/login" }, 
   ];
 
-  return (
-    <Drawer classes={{ paper: "sidebar-container" }} variant="permanent">
-      <div className="sidebar-header">
-        <h2 className="sidebar-title">
-          Admin Petcare
-        </h2>
-      </div>
-      <List>
-        {items.map((item, index) => (
-          <ListItem
-            button
-            component={Link}
-            to={item.link}
-            key={index}
-            className={`sidebar-item ${
+ return (
+  <Drawer classes={{ paper: "sidebar-container" }} variant="permanent">
+   <div className="sidebar-header">
+  <div className="sidebar-logo-container">
+    <img 
+       src={logoPet}
+      alt="Petcare Logo" 
+      className="sidebar-logo" 
+    />
+    <h2 className="sidebar-title">Quản trị hệ thống</h2>
+  </div>
+</div>
+
+    <List className="sidebar-list">
+      {items.slice(0, items.length - 1).map((item, index) => (
+        <ListItem
+          button
+          component={Link}
+          to={item.link}
+          key={index}
+          className={`sidebar-item ${
+            location.pathname === item.link ? "active" : ""
+          }`}
+        >
+          <ListItemIcon
+            className={`sidebar-icon ${
               location.pathname === item.link ? "active" : ""
             }`}
           >
-            <ListItemIcon
-              className={`sidebar-icon ${
-                location.pathname === item.link ? "active" : ""
-              }`}
-            >
-              {item.icon}
-            </ListItemIcon>
-            <ListItemText primary={item.text} />
-          </ListItem>
-        ))}
-      </List>
-    </Drawer>
-  );
+            {item.icon}
+          </ListItemIcon>
+          <ListItemText primary={item.text} />
+        </ListItem>
+      ))}
+    </List>
+    <ListItem
+      button
+      component={Link}
+      to="/login"
+      className="logout-button"
+    >
+      <ListItemIcon className="logout-icon">
+        <LogoutIcon />
+      </ListItemIcon>
+      <ListItemText primary="Đăng xuất" />
+    </ListItem>
+  </Drawer>
+);
+
 };
 
 export default Sidebar;

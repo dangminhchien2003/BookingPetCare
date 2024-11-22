@@ -3,6 +3,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import './Promotions.css'; // Thêm file CSS cho trang khuyến mãi
 import AddPromotion from './AddPromotions'; 
 import EditPromotions from './EditPromotions';
+import url from '../../ipconfig';
 
 const Promotions = () => {
   const [promotions, setPromotions] = useState([]);
@@ -15,7 +16,7 @@ const Promotions = () => {
   // Hàm tải danh sách khuyến mãi từ API
   const loadPromotions = async () => {
     try {
-      const response = await fetch('http://192.168.1.15/api/getkhuyenmai.php'); // Thay URL bằng API thực tế
+      const response = await fetch(`${url}/api/getkhuyenmai.php`); 
       if (!response.ok) {
         throw new Error('Lỗi khi tải danh sách khuyến mãi');
       }
@@ -57,7 +58,7 @@ const Promotions = () => {
   const handleDeletePromotion = async (idkhuyenmai) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa khuyến mãi này không?')) {
       try {
-        const response = await fetch('http://192.168.1.15/api/xoakhuyenmai.php', {
+        const response = await fetch(`${url}/api/xoakhuyenmai.php`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
