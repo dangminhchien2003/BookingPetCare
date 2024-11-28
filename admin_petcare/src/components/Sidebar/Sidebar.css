@@ -1,11 +1,14 @@
-/* Đặt chiều rộng cho sidebar và định dạng các thành phần bên trong */
 .sidebar-container {
   width: 250px;
-  background-color: #2c3e50; 
-  height: 100vh; 
-  padding-top: 20px; 
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3); /* Hiệu ứng đổ bóng */
-  transition: width 0.3s ease; /* Hiệu ứng chuyển động khi thay đổi chiều rộng */
+  /* background-color: #2c3e50 !important; */
+  /* height: 100vh; */
+  padding-top: 20px;
+  /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);  */
+  /* transition: width 0.3s ease;  */
+  /* position: fixed;  */
+  /* top: 0;
+  left: 0;
+  z-index: 1000; */
 }
 
 .sidebar-header {
@@ -13,7 +16,6 @@
   align-items: center;
   justify-content: center;
   padding: 10px;
-  color: #e66814;
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);  
 }
@@ -46,25 +48,25 @@
   display: flex;
   align-items: center;
   text-decoration: none; 
-  transition: background-color 0.3s ease, transform 0.2s; /* Hiệu ứng hover */
+  transition: background-color 0.3s ease, transform 0.2s;
 }
 
 /* Định dạng icon trong sidebar */
 .sidebar-icon {
-  color: #ecf0f1; 
+  /* color: #ecf0f1 !important;  */
   margin-right: 1px; 
-  transition: color 0.3s ease; /* Hiệu ứng chuyển màu cho icon */
+  transition: color 0.3s ease; 
 }
 
 /* Đổi màu khi item được hover */
 .sidebar-item:hover {
-  background-color: #34495e; 
+  /* background-color: #404291 !important;  */
   transform: translateX(5px); /* Di chuyển nhẹ sang phải khi hover */
 }
 
 /* Đổi màu khi item được active */
 .sidebar-item.active {
-  background-color: hsl(168, 76%, 42%); /* Màu khi item đang được chọn */
+  background-color: hsl(168, 76%, 42%); 
   color: rgb(241, 151, 151);
 }
 
@@ -104,9 +106,9 @@
 }
 
 .logout-button:hover {
-  background-color: #d32f2f;
+  background-color: #d32f2f !important;
 }
 
 .logout-icon {
-  color: white;
+  color: white !important;
 }

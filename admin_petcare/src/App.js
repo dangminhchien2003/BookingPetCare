@@ -2,36 +2,58 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar/Sidebar"; 
-import Dashboard from "./components/Dashboard/Dashboard";
-import Services from "./components/Services/Services";
-import Users from "./components/Users/Users";
-import Bookings from "./components/Booking/Bookings";
-import Center from "./components/Center/Center";
-import Login from "./components/Login/Login";
-import Promotions from "./components/Promotions/Promotions";
-import Setting from "./components/Setting/Setting";
-import ServiceCenter from "./components/Services_Center/ServiceCenter";
+import Dashboard from "./View/Dashboard/Dashboard";
+import Services from "./View/Services/Services";
+import Users from "./View/Users/Users";
+import Bookings from "./View/Booking/Bookings";
+import Center from "./View/Center/Center";
+import Login from "./View/Login/Login";
+import Promotions from "./View/Promotions/Promotions";
+import Setting from "./View/Setting/Setting";
+import ServiceCenter from "./View/Services_Center/ServiceCenter";
+import TopBar from "./components/Topbar/Topbar";
+
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import PersonIcon from "@mui/icons-material/Person";
+import RoomServiceIcon from "@mui/icons-material/RoomService";
+import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
+import LoyaltyIcon from "@mui/icons-material/Loyalty";
+import EventNoteIcon from "@mui/icons-material/EventNote";
+import SettingsIcon from "@mui/icons-material/Settings";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 import { Box } from "@mui/material";
 import "./App.css";
 
 function App() {
+
+  const items = [
+    { title: "Quản lý tổng quan", text: "Tổng quan", icon: <DashboardIcon />, link: "/dashboard" },
+    { title: "Quản lý người dùng", text: "Người dùng", icon: <PersonIcon />, link: "/users" },
+    { title: "Quản lý dịch vụ", text: "Dịch vụ", icon: <RoomServiceIcon />, link: "/services" },
+    { title: "Quản lý trung tâm", text: "Trung tâm", icon: <MapsHomeWorkIcon />, link: "/center" },
+    { title: "Quản lý dịch vụ-trung tâm", text: "Dịch vụ-Trung tâm", icon: <SettingsIcon />, link: "/servicecenter" },
+    { title: "Quản lý khuyến mãi", text: "Khuyến mãi", icon: <LoyaltyIcon />, link: "/promotions" },
+    { title: "Quản lý lịch hẹn", text: "Lịch hẹn", icon: <EventNoteIcon />, link: "/bookings" },
+    { title: "Cài đặt hệ thống", text: "Cài đặt", icon: <SettingsIcon />, link: "/setting" },
+    { title: "Đăng xuất", text: "Đăng xuất", icon: <LogoutIcon />, link: "/login" },
+  ];
+
   return (
     <Router>
       <div className="App">
         <Routes>
-          {/* Điều hướng từ trang gốc ("/") đến trang đăng nhập ("/login") */}
+          
           <Route path="/" element={<Navigate to="/login" />} />
-
-          {/* Định nghĩa các đường dẫn cho trang đăng nhập và đăng ký - nằm ngoài AppGlass */}
           <Route path="/login" element={<Login />} />
          
-          {/* Các trang sau khi đăng nhập sẽ nằm trong AppGlass */}
           <Route
             path="*"
             element={
-              <div className="AppGlass">
-                <Sidebar />
+              <div className="AppGlass" style={{ display: "flex", flexDirection: "row" }}>
+              <TopBar items={items} />
+              <div style={{ display: "flex", flex: 1 }}>
+              <Sidebar items={items} />
                 <Box sx={{ flexGrow: 1, padding: "20px" }}>
                   <Routes>
                     <Route path="/dashboard" element={<Dashboard />} />
@@ -40,11 +62,12 @@ function App() {
                     <Route path="/bookings" element={<Bookings />} />
                     <Route path="/center" element={<Center />} />
                     <Route path="/ServiceCenter" element={<ServiceCenter />} />
-                    <Route path="/promotions" element={<Promotions/>} />
+                    <Route path="/promotions" element={<Promotions />} />
                     <Route path="/setting" element={<Setting />} />
                   </Routes>
                 </Box>
               </div>
+            </div>
             }
           />
         </Routes>

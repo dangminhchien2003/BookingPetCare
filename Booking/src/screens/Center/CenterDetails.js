@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, FlatList }
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MapView, { Marker } from 'react-native-maps'; // Nhập MapView và Marker
-import url from '../../ipconfig';
+import url from '../../../ipconfig';
 
 const CenterDetails = ({ route, navigation }) => {
   const { center } = route.params;

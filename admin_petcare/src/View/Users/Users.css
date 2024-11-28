@@ -1,6 +1,6 @@
 .user-content-section {
   min-height: 100vh; /* Đảm bảo chiều cao tối thiểu là 100% chiều cao màn hình */
-  margin: 0;
+  margin-top: 100px;
   box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng/chiều cao của phần tử */
   display: flex;
   flex-direction: column;
@@ -97,6 +97,7 @@ button.user-delete:hover {
   align-items: center;
   margin-bottom: 20px;
   position: relative;
+  
 }
 
 /* CSS cho tiêu đề */

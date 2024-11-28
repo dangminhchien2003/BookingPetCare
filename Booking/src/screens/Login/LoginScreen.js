@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import url from '../../ipconfig';
+import url from '../../../ipconfig';
 import Icon from 'react-native-vector-icons/MaterialIcons';  
 
 const LoginScreen = ({ navigation }) => {

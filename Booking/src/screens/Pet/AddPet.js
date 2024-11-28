@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import url from '../../ipconfig';
+import url from '../../../ipconfig';
 
 const AddPet = ({ navigation }) => {
     const [tenthucung, setTenThucUng] = useState('');

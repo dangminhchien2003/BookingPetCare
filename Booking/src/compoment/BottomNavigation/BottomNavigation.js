@@ -1,107 +1,133 @@
-import React, { useState } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import { Ionicons } from "@expo/vector-icons";
+import Splash from "../../screens/Login/Splash";
+import HomeScreen from "../../screens/Home/HomeScreen";
+import BookingScreen from "../../screens/Booking/BookingScreen";
+import LoginScreen from "../../screens/Login/LoginScreen";
+import SignUpScreen from "../../screens/Login/SignUpScreen";
+import CenterDetails from "../../screens/Center/CenterDetails";
+import ProfileScreen from "../../screens/Profile/ProfileScreen";
+import SearchScreen from "../../screens/Search/SearchScreen";
+import BookingListScreen from "../../screens/Booking/BookingListScreen";
+import PetScreen from "../../screens/Pet/PetScreen";
+import AddPet from "../../screens/Pet/AddPet";
+import EditPet from "../../screens/Pet/EditPet";
+// import PetDetail from "../../screens/Pet/PetDetail";
+import ServiceDetails from "../../screens/Service/ServiceDetails";
 
-const BottomNavigation = () => {
-  const navigation = useNavigation();
-  const [selectedTab, setSelectedTab] = useState('Home');
+const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-  const handlePress = (tab) => {
-    setSelectedTab(tab); // Update state when tab is clicked
-    navigation.navigate(tab); // Navigate to corresponding screen
-  };
-
+const BottomTabNavigator = () => {
   return (
-    <View style={styles.bottomNavigation}>
-      <TouchableOpacity
-        onPress={() => handlePress('Home')}
-        style={[styles.bottomButton, selectedTab === 'Home' && styles.selectedButton]}
-      >
-        <Ionicons
-          name="home-outline"
-          size={24}
-          color={selectedTab === 'Home' ? '#FF9900' : 'black'}
-          style={styles.bottomIcon}
-        />
-        <Text style={[styles.bottomText, selectedTab === 'Home' && styles.selectedText]}>Trang chủ</Text>
-      </TouchableOpacity>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
 
-      <TouchableOpacity
-        onPress={() => handlePress('Search')}
-        style={[styles.bottomButton, selectedTab === 'Search' && styles.selectedButton]}
-      >
-        <Ionicons
-          name="search-outline"
-          size={24}
-          color={selectedTab === 'Search' ? '#FF9900' : 'black'}
-          style={styles.bottomIcon}
-        />
-        <Text style={[styles.bottomText, selectedTab === 'Search' && styles.selectedText]}>Tìm kiếm</Text>
-      </TouchableOpacity>
+          if (route.name === "Trang chủ") {
+            iconName = "home-outline";
+          } else if (route.name === "Tìm kiếm") {
+            iconName = "search-outline";
+          } else if (route.name === "Lịch hẹn") {
+            iconName = "calendar-outline";
+          } else if (route.name === "Cá nhân") {
+            iconName = "person-outline";
+          }
 
-      <TouchableOpacity
-        onPress={() => handlePress('BookingListScreen')}
-        style={[styles.bottomButton, selectedTab === 'BookingListScreen' && styles.selectedButton]}
-      >
-        <Ionicons
-          name="calendar-outline"
-          size={24}
-          color={selectedTab === 'BookingListScreen' ? '#FF9900' : 'black'}
-          style={styles.bottomIcon}
-        />
-        <Text style={[styles.bottomText, selectedTab === 'BookingListScreen' && styles.selectedText]}>Lịch hẹn</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => handlePress('ProfileScreen')}
-        style={[styles.bottomButton, selectedTab === 'ProfileScreen' && styles.selectedButton]}
-      >
-        <Ionicons
-          name="person-outline"
-          size={24}
-          color={selectedTab === 'ProfileScreen' ? '#FF9900' : 'black'}
-          style={styles.bottomIcon}
-        />
-        <Text style={[styles.bottomText, selectedTab === 'ProfileScreen' && styles.selectedText]}>Cá nhân</Text>
-      </TouchableOpacity>
-    </View>
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+      })}
+    >
+      <Tab.Screen
+        name="Trang chủ"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Tìm kiếm"
+        component={SearchScreen}
+        options={{ title: "Tìm kiếm " }}
+      />
+      <Tab.Screen
+        name="Lịch hẹn"
+        component={BookingListScreen}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Cá nhân"
+        component={ProfileScreen}
+        options={{ headerShown: false }}
+      />
+    </Tab.Navigator>
   );
 };
 
-const styles = StyleSheet.create({
-  bottomNavigation: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ccc',
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    backgroundColor: '#fff',
-  },
-  bottomButton: {
-    alignItems: 'center',
-    paddingVertical: 5,
-  },
-  selectedButton: {
-    backgroundColor: '#e0e0e0',
-    borderRadius: 5,
-  },
-  bottomIcon: {
-    marginBottom: 5,
-    alignSelf: 'center',
-  },
-  bottomText: {
-    fontSize: 12,
-    textAlign: 'center',
-    color: 'black',
-  },
-  selectedText: {
-    color: '#FF9900', // Highlight color when selected
-    fontWeight: 'bold', // Optional: Make text bold when selected
-  },
-});
+const Rootnavi = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Splash">
+      <Stack.Screen
+          name="Splash"
+          component={Splash}
+          options={{ title: "Splash", headerShown: false }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ title: "Login", headerShown: false }}
+        />
+        <Stack.Screen
+          name="SignUp"
+          component={SignUpScreen}
+          options={{ title: "Signup",headerShown: false }}
+        />
+        <Stack.Screen
+          name="Home"
+          component={BottomTabNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CenterDetails"
+          component={CenterDetails}
+          options={{ title: "Chi tiết trung tâm" }}
+        />
+        <Stack.Screen
+          name="Booking"
+          component={BookingScreen}
+          options={{ title: "Đặt lịch dịch vụ" }}
+        />
+        <Stack.Screen
+          name="PetScreen"
+          component={PetScreen}
+          options={{ title: "Quản lý thú cưng" }}
+        />
+         <Stack.Screen
+          name="AddPet"
+          component={AddPet}
+          options={{ title: "Thêm thú cưng" }}
+        />
+         <Stack.Screen
+          name="EditPet"
+          component={EditPet}
+          options={{ title: "Sửa thú cưng" }}
+        />
+        {/* <Stack.Screen
+          name="PetDetail"
+          component={PetDetail}
+          options={{ title: "PetDetail" }}
+        /> */}
+        <Stack.Screen
+          name="ServiceDetails"
+          component={ServiceDetails}
+          options={{ title: "Chi tiết dịch vụ" }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
 
-export default BottomNavigation;
+export default Rootnavi;

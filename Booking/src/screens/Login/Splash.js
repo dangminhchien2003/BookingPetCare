@@ -10,7 +10,7 @@ const Splash = ({ navigation }) => {
     // Ẩn splash screen sau 3 giây và chuyển đến trang login
     const timer = setTimeout(() => {
       navigation.replace('Login');
-    }, 3);
+    }, 30);
 
     // Dấu chấm loading
     const dotTimer = setInterval(() => {

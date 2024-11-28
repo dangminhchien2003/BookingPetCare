@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';  
-import url from '../../ipconfig';
+import url from '../../../ipconfig';
 
 const SignUpScreen = ({ navigation }) => {
   const [name, setName] = useState('');

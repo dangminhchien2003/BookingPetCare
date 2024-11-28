@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'rea
 import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import url from '../../ipconfig';
+import url from '../../../ipconfig';
 
 const HomeScreen = ({ navigation }) => {
   const [dichvu, setDichvu] = useState([]);
@@ -141,26 +141,6 @@ const HomeScreen = ({ navigation }) => {
           </ScrollView>
         </View>
       </ScrollView>
-
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNavigation}>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <Ionicons name="home-outline" size={24} color="black" style={styles.bottomIcon} />
-          <Text style={styles.bottomText}>Trang chủ</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-          <Ionicons name="search-outline" size={24} color="black" style={styles.bottomIcon} />
-          <Text style={styles.bottomText}>Tìm kiếm</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('BookingListScreen')}>
-          <Ionicons name="calendar-outline" size={24} color="black" style={styles.bottomIcon} />
-          <Text style={styles.bottomText}>Lịch hẹn</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
-          <Ionicons name="person-outline" size={24} color="black" style={styles.bottomIcon} />
-          <Text style={styles.bottomText}>Cá nhân</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
@@ -290,21 +270,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#555',
   },
-  bottomNavigation: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ccc',
-  },
-  bottomIcon: {
-    marginBottom: 5,
-    alignSelf: 'center',
-  },
-  bottomText: {
-    fontSize: 12,
-    textAlign: 'center',
-  },
+ 
 });
 
 export default HomeScreen;
