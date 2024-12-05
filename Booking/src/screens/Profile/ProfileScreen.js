@@ -90,7 +90,10 @@ const ProfileScreen = () => {
               <Text style={styles.buttonText}>Thông tin cá nhân</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("ChangePasswordScreen")}
+            >
               <Ionicons
                 name="key-outline"
                 size={20}
@@ -127,7 +130,7 @@ const ProfileScreen = () => {
 
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate("PetScreen")}
+              onPress={() => navigation.navigate("SupportScreen")}
             >
               <Ionicons
                 name="help-circle-outline"
@@ -151,7 +154,7 @@ const ProfileScreen = () => {
           <View style={styles.containerbutton}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate("Login")}
+              onPress={() => navigation.replace("Login")}
             >
               <Icon
                 name="sign-out"

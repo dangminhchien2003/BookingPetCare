@@ -1,7 +1,7 @@
 .services-content-section {
-    min-height: 100vh; /* Đảm bảo chiều cao tối thiểu là 100% chiều cao màn hình */
-    margin: 0;
-    box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng/chiều cao của phần tử */
+    min-height: 100vh; 
+    margin-top: 80px;
+    box-sizing: border-box; 
     display: flex;
     flex-direction: column;
   }
@@ -82,7 +82,7 @@
 /* CSS cho header-section */
 .services-header-section {
   display: flex;
-  justify-content: center;  /* Canh giữa tất cả các phần tử */
+  justify-content: center;  
   align-items: center;
   margin-bottom: 20px;
   position: relative;

@@ -17,6 +17,8 @@ import AddPet from "../../screens/Pet/AddPet";
 import EditPet from "../../screens/Pet/EditPet";
 // import PetDetail from "../../screens/Pet/PetDetail";
 import ServiceDetails from "../../screens/Service/ServiceDetails";
+import ChangePasswordScreen from "../../screens/ChangePassword/ChangePasswordScreen";
+import SupportScreen from "../../screens/Support/SupportScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -40,6 +42,8 @@ const BottomTabNavigator = () => {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
+        tabBarActiveTintColor: '#FFCC33', // Màu khi tab được chọn (active)
+        // tabBarInactiveTintColor: '#AAAAAA',
       })}
     >
       <Tab.Screen
@@ -55,7 +59,15 @@ const BottomTabNavigator = () => {
       <Tab.Screen
         name="Lịch hẹn"
         component={BookingListScreen}
-        options={{ headerShown: false }}
+        options={{
+          title: "Quản lý lịch hẹn ",
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontSize: 20,
+            fontWeight: "bold",
+           
+          },
+        }}
       />
       <Tab.Screen
         name="Cá nhân"
@@ -70,7 +82,7 @@ const Rootnavi = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Splash">
-      <Stack.Screen
+        <Stack.Screen
           name="Splash"
           component={Splash}
           options={{ title: "Splash", headerShown: false }}
@@ -83,7 +95,7 @@ const Rootnavi = () => {
         <Stack.Screen
           name="SignUp"
           component={SignUpScreen}
-          options={{ title: "Signup",headerShown: false }}
+          options={{ title: "Signup", headerShown: false }}
         />
         <Stack.Screen
           name="Home"
@@ -105,12 +117,12 @@ const Rootnavi = () => {
           component={PetScreen}
           options={{ title: "Quản lý thú cưng" }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="AddPet"
           component={AddPet}
           options={{ title: "Thêm thú cưng" }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="EditPet"
           component={EditPet}
           options={{ title: "Sửa thú cưng" }}
@@ -124,6 +136,16 @@ const Rootnavi = () => {
           name="ServiceDetails"
           component={ServiceDetails}
           options={{ title: "Chi tiết dịch vụ" }}
+        />
+        <Stack.Screen
+          name="ChangePasswordScreen"
+          component={ChangePasswordScreen}
+          options={{ title: "Đổi mật khẩu" }}
+        />
+        <Stack.Screen
+          name="SupportScreen"
+          component={SupportScreen}
+          options={{ title: "Hỗ trợ khách hàng" }}
         />
       </Stack.Navigator>
     </NavigationContainer>

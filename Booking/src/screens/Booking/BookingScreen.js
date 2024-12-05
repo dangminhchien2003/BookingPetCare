@@ -1,13 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import url from '../../../ipconfig';
-import { Picker } from '@react-native-picker/picker';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
-import { useFocusEffect } from '@react-navigation/native';
-
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+  Alert,
+  Modal,
+} from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import url from "../../../ipconfig";
+import { Picker } from "@react-native-picker/picker";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
+import moment from 'moment'; 
+import 'moment/locale/vi'; 
 
 const BookingScreen = () => {
   const [centers, setCenters] = useState([]);
@@ -19,12 +30,12 @@ const BookingScreen = () => {
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
-  const [customerName, setCustomerName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [address, setAddress] = useState('');
+  const [customerName, setCustomerName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [address, setAddress] = useState("");
   const [selectedPet, setSelectedPet] = useState(null);
   const navigation = useNavigation();
-  
+
   useEffect(() => {
     const fetchCenters = async () => {
       try {
@@ -32,13 +43,13 @@ const BookingScreen = () => {
         const data = await response.json();
         setCenters(data);
       } catch (error) {
-        console.error('Lỗi khi tải dữ liệu trung tâm:', error);
+        console.error("Lỗi khi tải dữ liệu trung tâm:", error);
       }
     };
 
     const loadUserData = async () => {
       try {
-        const userData = await AsyncStorage.getItem('user');
+        const userData = await AsyncStorage.getItem("user");
         if (userData) {
           const parsedUserData = JSON.parse(userData);
           setCustomerName(parsedUserData.tennguoidung);
@@ -46,19 +57,21 @@ const BookingScreen = () => {
           setAddress(parsedUserData.diachi);
         }
       } catch (error) {
-        console.error('Lỗi khi tải dữ liệu người dùng:', error);
+        console.error("Lỗi khi tải dữ liệu người dùng:", error);
       }
     };
 
     const loadPets = async () => {
       try {
-        const userData = await AsyncStorage.getItem('user');
+        const userData = await AsyncStorage.getItem("user");
         const parsedUserData = JSON.parse(userData);
-        const response = await fetch(`${url}/api/getthucungbynguoidung.php?idnguoidung=${parsedUserData.idnguoidung}`);
+        const response = await fetch(
+          `${url}/api/getthucungbynguoidung.php?idnguoidung=${parsedUserData.idnguoidung}`
+        );
         const petData = await response.json();
         setPets(petData);
       } catch (error) {
-        console.error('Lỗi khi tải dữ liệu thú cưng:', error);
+        console.error("Lỗi khi tải dữ liệu thú cưng:", error);
       }
     };
 
@@ -72,73 +85,94 @@ const BookingScreen = () => {
     React.useCallback(() => {
       const loadPets = async () => {
         try {
-          const userData = await AsyncStorage.getItem('user');
+          const userData = await AsyncStorage.getItem("user");
           const parsedUserData = JSON.parse(userData);
-          const response = await fetch(`${url}/api/getthucungbynguoidung.php?idnguoidung=${parsedUserData.idnguoidung}`);
+          const response = await fetch(
+            `${url}/api/getthucungbynguoidung.php?idnguoidung=${parsedUserData.idnguoidung}`
+          );
           const petData = await response.json();
           setPets(petData);
         } catch (error) {
-          console.error('Lỗi khi tải dữ liệu thú cưng:', error);
+          console.error("Lỗi khi tải dữ liệu thú cưng:", error);
         }
       };
 
       loadPets();
-
-      // cleanup function không cần thiết trong trường hợp này
     }, [])
   );
 
   const handleCenterSelect = async (centerId) => {
-    const selected = centers.find(center => center.idtrungtam === centerId);
+    const selected = centers.find((center) => center.idtrungtam === centerId);
     setSelectedCenter(selected);
     setSelectedServices([]);
     try {
-      const response = await fetch(`${url}/api/getdichvu_trungtam.php?idtrungtam=${centerId}`);
+      const response = await fetch(
+        `${url}/api/getdichvu_trungtam.php?idtrungtam=${centerId}`
+      );
       const data = await response.json();
       setServices(data);
     } catch (error) {
-      console.error('Lỗi khi tải dịch vụ:', error);
+      console.error("Lỗi khi tải dịch vụ:", error);
     }
   };
 
   const onConfirmBooking = async () => {
     if (!selectedCenter || selectedServices.length === 0 || !selectedPet) {
-      Alert.alert('Lỗi', 'Vui lòng chọn đầy đủ trung tâm, dịch vụ và thú cưng.');
+      Alert.alert(
+        "Lỗi",
+        "Vui lòng chọn đầy đủ trung tâm, dịch vụ và thú cưng."
+      );
       return;
     }
 
     try {
-      const userData = await AsyncStorage.getItem('user');
+      const userData = await AsyncStorage.getItem("user");
       const parsedUserData = JSON.parse(userData);
 
       const bookingData = {
         idnguoidung: parsedUserData.idnguoidung,
         idthucung: selectedPet,
         idtrungtam: selectedCenter.idtrungtam,
-        ngayhen: selectedDate.toISOString().split('T')[0],
-        thoigianhen: selectedTime.toTimeString().split(' ')[0],
+        ngayhen: selectedDate.toISOString().split("T")[0],
+        thoigianhen: selectedTime.toTimeString().split(" ")[0],
         dichvu: selectedServices,
       };
 
       // Gửi yêu cầu tạo lịch hẹn
       const response = await fetch(`${url}/api/themlichhen.php`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(bookingData),
       });
 
       const result = await response.json();
       if (result.message === "Lịch hẹn đã được lưu thành công!") {
-        Alert.alert('Thành công', 'Đặt lịch hẹn thành công!');
-        // Có thể reset các trường sau khi đặt lịch thành công nếu cần
+        // Hiển thị thông báo toast thành công
+        Toast.show({
+          type: "success",
+          text1: "Thành công",
+          text2: "Đặt lịch hẹn thành công!",
+          textStyle: { color: "#fff" },
+          visibilityTime: 2000,
+        });
+
+        // Chuyển hướng về trang Home sau 2 giây
+        setTimeout(() => {
+          navigation.navigate("Home", { screen: "Lịch hẹn" });
+        }, 2000);
       } else {
-        Alert.alert('Lỗi', 'Có lỗi xảy ra khi đặt lịch hẹn.');
+        // Hiển thị thông báo lỗi nếu có
+        Toast.show({
+          type: "error",
+          text1: "Lỗi",
+          text2: "Có lỗi xảy ra khi đặt lịch hẹn.",
+        });
       }
     } catch (error) {
-      console.error('Lỗi khi đặt lịch hẹn:', error);
-      Alert.alert('Lỗi', 'Có lỗi xảy ra');
+      console.error("Lỗi khi đặt lịch hẹn:", error);
+      Alert.alert("Lỗi", "Có lỗi xảy ra");
     }
   };
 
@@ -152,10 +186,13 @@ const BookingScreen = () => {
     });
   };
 
+  // Hàm format ngày thành tiếng Việt
+  const formatDate = (date) => {
+    return moment(date).format('dddd, D MMMM YYYY'); 
+  };
+
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.headerText}>Đặt lịch dịch vụ</Text>
-
       {/* Hiển thị thông tin người dùng */}
       <View style={styles.userInfoContainer}>
         <Text style={styles.userInfoText}>Tên: {customerName}</Text>
@@ -163,27 +200,32 @@ const BookingScreen = () => {
         <Text style={styles.userInfoText}>Địa chỉ: {address}</Text>
       </View>
 
-     {/* Thêm thú cưng */}
-<View style={styles.inputContainer}>
-  <Text style={styles.label}>Chọn thú cưng</Text>
-  <TouchableOpacity
-    style={styles.button}
-    onPress={() => navigation.navigate('AddPet')} // Thay 'AddPetScreen' bằng tên của trang thêm thú cưng
-  >
-    <Text style={styles.buttonText}>Thêm thú cưng</Text>
-  </TouchableOpacity>
-  <Picker
-    selectedValue={selectedPet}
-    onValueChange={(itemValue) => setSelectedPet(itemValue)}
-    style={styles.picker}
-  >
-    <Picker.Item label="Chọn thú cưng" value={null} />
-    {pets.map(pet => (
-      <Picker.Item key={pet.idthucung} label={pet.tenthucung} value={pet.idthucung} />
-    ))}
-  </Picker>
-</View>
+      {/* Thêm thú cưng */}
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Chọn thú cưng</Text>
+        <TouchableOpacity
+          style={styles.addPetButton}
+          onPress={() => navigation.navigate("AddPet")}
+        >
+          <Icon name="plus" size={20} color="#fff" />
+          <Text style={styles.addPetButtonText}>Thêm thú cưng</Text>
+        </TouchableOpacity>
 
+        <Picker
+          selectedValue={selectedPet}
+          onValueChange={(itemValue) => setSelectedPet(itemValue)}
+          style={styles.picker}
+        >
+          <Picker.Item label="Chọn thú cưng" value={null} />
+          {pets.map((pet) => (
+            <Picker.Item
+              key={pet.idthucung}
+              label={pet.tenthucung}
+              value={pet.idthucung}
+            />
+          ))}
+        </Picker>
+      </View>
 
       {/* Chọn trung tâm */}
       <View style={styles.inputContainer}>
@@ -194,24 +236,41 @@ const BookingScreen = () => {
           style={styles.picker}
         >
           <Picker.Item label="Chọn trung tâm" value={null} />
-          {centers.map(center => (
-            <Picker.Item key={center.idtrungtam} label={center.tentrungtam} value={center.idtrungtam} />
+          {centers.map((center) => (
+            <Picker.Item
+              key={center.idtrungtam}
+              label={center.tentrungtam}
+              value={center.idtrungtam}
+            />
           ))}
         </Picker>
       </View>
 
       {/* Chọn dịch vụ */}
       <Text style={styles.label}>Chọn dịch vụ</Text>
-      {services.map(service => (
-        <TouchableOpacity key={service.iddichvu} style={styles.serviceContainer} onPress={() => handleServiceToggle(service)}>
-          <Text style={styles.serviceText}>{service.tendichvu}</Text>
-          {selectedServices.includes(service.iddichvu) && <Icon name="check" size={20} color="#4caf50" />}
+      {services.map((service) => (
+        <TouchableOpacity
+          key={service.iddichvu}
+          style={styles.serviceContainer}
+          onPress={() => handleServiceToggle(service)}
+        >
+          <Text style={styles.serviceText}>
+            {service.tendichvu} - {service.gia.toLocaleString("vi-VN")} VND
+          </Text>
+          {selectedServices.includes(service.iddichvu) && (
+            <Icon name="check" size={20} color="#4caf50" />
+          )}
         </TouchableOpacity>
       ))}
 
       {/* Chọn ngày */}
-      <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateButton}>
-        <Text style={styles.dateButtonText}>Chọn ngày: {selectedDate.toDateString()}</Text>
+      <TouchableOpacity
+        onPress={() => setShowDatePicker(true)}
+        style={styles.dateButton}
+      >
+        <Text style={styles.dateButtonText}>
+          Chọn ngày: {formatDate(selectedDate)} 
+        </Text>
       </TouchableOpacity>
       {showDatePicker && (
         <DateTimePicker
@@ -228,8 +287,17 @@ const BookingScreen = () => {
       )}
 
       {/* Chọn giờ */}
-      <TouchableOpacity onPress={() => setShowTimePicker(true)} style={styles.timeButton}>
-        <Text style={styles.timeButtonText}>Chọn giờ: {selectedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
+      <TouchableOpacity
+        onPress={() => setShowTimePicker(true)}
+        style={styles.timeButton}
+      >
+        <Text style={styles.timeButtonText}>
+          Chọn giờ:{" "}
+          {selectedTime.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </Text>
       </TouchableOpacity>
       {showTimePicker && (
         <DateTimePicker
@@ -244,10 +312,98 @@ const BookingScreen = () => {
           }}
         />
       )}
+      {/* Thông tin đặt lịch */}
+      <View style={styles.summary}>
+        <Text style={styles.summaryTitle}>Thông tin đặt lịch:</Text>
+
+        <View style={styles.groupsumary}>
+          <Text>Tên: </Text>
+          <Text>{customerName}</Text>
+        </View>
+
+        <View style={styles.groupsumary}>
+          <Text>Số điện thoại: </Text>
+          <Text>{phoneNumber}</Text>
+        </View>
+
+        {/* Trung tâm */}
+        <View style={styles.groupsumary}>
+          <Text>Trung tâm: </Text>
+          <Text>{selectedCenter?.tentrungtam}</Text>
+        </View>
+
+        {/* Ngày tháng */}
+        <View style={styles.groupsumary}>
+          <Text>Ngày: </Text>
+          <Text>{selectedDate.toLocaleDateString()}</Text>
+        </View>
+
+        {/* Giờ */}
+        <View style={styles.groupsumary}>
+          <Text> Giờ: </Text>
+          <Text>{selectedTime.toLocaleTimeString()}</Text>
+        </View>
+
+        {/* Dịch vụ */}
+        <View style={styles.groupsumary}>
+          <Text> Dịch vụ: </Text>
+          <Text>
+            {" "}
+            {services
+              .filter((service) => selectedServices.includes(service.iddichvu))
+              .map((service) => service.tendichvu)
+              .join(", ")}
+          </Text>
+        </View>
+
+        {/* Thú cưng */}
+        <View style={styles.groupsumary}>
+          <Text> Thú cưng: </Text>
+          <Text>
+            {" "}
+            {pets.find((pet) => pet.idthucung === selectedPet)?.tenthucung}
+          </Text>
+        </View>
+
+        {/* Tổng tiền */}
+        <Text
+          style={{
+            color: "#ff0000",
+            marginTop: 10,
+            paddingTop: 5,
+            fontSize: 16,
+            borderTopColor: "black",
+            borderTopWidth: 0.3,
+            fontWeight: "bold",
+          }}
+        >
+          Tổng tiền dịch vụ:{" "}
+          {services
+            .filter((service) => selectedServices.includes(service.iddichvu))
+            .reduce((total, service) => total + service.gia, 0)
+            .toLocaleString("vi-VN")}{" "}
+          VND
+        </Text>
+      </View>
 
       <TouchableOpacity onPress={onConfirmBooking} style={styles.confirmButton}>
         <Text style={styles.confirmButtonText}>Xác nhận đặt lịch</Text>
       </TouchableOpacity>
+
+      {/* Modal xác nhận */}
+      {/* <BookingModal
+        showModal={showModal}
+        selectedCenter={selectedCenter}
+        selectedDate={selectedDate}
+        selectedTime={selectedTime}
+        selectedServices={selectedServices}
+        services={services}
+        pets={pets}
+        selectedPet={selectedPet}
+        onConfirmBooking={handleModalConfirm}
+        onCancelBooking={handleModalCancel}
+      /> */}
+      <Toast position="bottom" bottomOffset={40} />
     </ScrollView>
   );
 };
@@ -255,76 +411,168 @@ const BookingScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 16,
+    backgroundColor: "#f4f7fc",
   },
-  headerText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
+
   userInfoContainer: {
     marginBottom: 20,
-    padding: 10,
+    padding: 12,
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    backgroundColor: "#fff",
   },
   userInfoText: {
     fontSize: 16,
+    color: "#333",
+    marginBottom: 5,
   },
   inputContainer: {
     marginBottom: 20,
   },
   label: {
     fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
+    fontWeight: "bold",
+    color: "#555",
+    marginBottom: 8,
   },
+  addPetButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: "#f9b233",
+    borderRadius: 20,
+    elevation: 3,
+    marginBottom: 15,
+  },
+  addPetButtonText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#fff",
+    marginLeft: 8,
+  },
+
   picker: {
-    height: 50,
-    width: '100%',
+    height: 45,
+    width: "100%",
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 8,
+    backgroundColor: "#fff",
+    marginBottom: 15,
+    paddingHorizontal: 8,
   },
   serviceContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 12,
     borderWidth: 1,
-    borderColor: '#ccc',
-    marginBottom: 10,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    marginBottom: 12,
+    backgroundColor: "#fff",
   },
+
   serviceText: {
     fontSize: 16,
+    color: "#333",
+    flexDirection: "row",
+    alignItems: "center",
   },
+
   dateButton: {
-    padding: 10,
-    backgroundColor: '#007bff',
-    borderRadius: 5,
+    padding: 12,
+    backgroundColor: "#007bff",
+    borderRadius: 8,
     marginBottom: 20,
+    alignItems: "center",
   },
   dateButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
   },
   timeButton: {
-    padding: 10,
-    backgroundColor: '#007bff',
-    borderRadius: 5,
+    padding: 12,
+    backgroundColor: "#007bff",
+    borderRadius: 8,
     marginBottom: 20,
+    alignItems: "center",
   },
   timeButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
   },
   confirmButton: {
-    padding: 15,
-    backgroundColor: '#28a745',
-    borderRadius: 5,
-    alignItems: 'center',
+    paddingVertical: 12,
+    backgroundColor: "#28a745",
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 20,
+    marginBottom: 20,
   },
   confirmButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
+    fontWeight: "bold",
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    width: "80%",
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  modalActions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+  },
+  modalButton: {
+    backgroundColor: "#007bff",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  modalButtonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+  summary: {
+    marginBottom: 20,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    backgroundColor: "#fff",
+  },
+  summaryTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  groupsumary: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 8,
   },
 });
 

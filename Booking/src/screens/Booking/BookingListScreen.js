@@ -13,11 +13,14 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import url from "../../../ipconfig";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import CancelModel from "../../compoment/CancelModal/CancelModel";
 
 const Tab = createMaterialTopTabNavigator();
 
 const BookingListScreen = ({ navigation }) => {
   const [userId, setUserId] = useState(null);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [selectedBookingId, setSelectedBookingId] = useState(null);
 
   const getUserId = async () => {
     try {
@@ -95,24 +98,50 @@ const BookingListScreen = ({ navigation }) => {
     }
   };
 
-  const cancelBooking = async (bookingId) => {
+  const handleCancel = async (reason) => {
+    console.log("Lý do hủy gửi đi:", reason);
+    if (!reason) {
+      Alert.alert("Thông báo", "Vui lòng nhập lý do hủy.");
+      return;
+    }
+
     try {
       const response = await axios.post(`${url}/api/cancel_booking.php`, {
-        idlichhen: bookingId,
+        idlichhen: selectedBookingId,
+        idnguoidung: userId,
+        lydohuy: reason,
       });
+
       if (response.data.success) {
         Alert.alert("Thông báo", "Hủy lịch hẹn thành công!");
-        // Cập nhật lại danh sách lịch hẹn
-        setBookings((prevBookings) =>
-          prevBookings.filter((booking) => booking.idlichhen !== bookingId)
-        );
       } else {
-        Alert.alert("Thông báo", "Có lỗi khi hủy lịch hẹn.");
+        Alert.alert(
+          "Thông báo",
+          response.data.message || "Có lỗi khi hủy lịch hẹn."
+        );
       }
     } catch (error) {
-      console.error("Lỗi khi hủy lịch hẹn:", error);
+      console.error("Lỗi khi gọi API:", error);
       Alert.alert("Thông báo", "Có lỗi xảy ra. Vui lòng thử lại.");
     }
+
+    setShowCancelModal(false);
+    setSelectedBookingId(null);
+  };
+
+  const closeCancelModal = () => {
+    setShowCancelModal(false);
+    setSelectedBookingId(null);
+  };
+
+  const submitCancelReason = (reason) => {
+    console.log("Lý do hủy:", reason);
+    handleCancel(reason);
+  };
+
+  const openCancelModal = (bookingId) => {
+    setSelectedBookingId(bookingId);
+    setShowCancelModal(true);
   };
 
   const trangthai = {
@@ -123,7 +152,7 @@ const BookingListScreen = ({ navigation }) => {
     4: "Đã hủy",
   };
 
-  const BookingTab = ({ fetchBookings }) => {
+  const BookingTab = ({ fetchBookings, showCancelButton }) => {
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -158,12 +187,7 @@ const BookingListScreen = ({ navigation }) => {
           <FlatList
             data={bookings}
             renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.bookingCard}
-                onPress={() =>
-                  navigation.navigate("BookingDetails", { booking: item })
-                }
-              >
+              <View style={styles.bookingCard}>
                 {/* Nội dung hiển thị lịch hẹn */}
                 <View style={styles.bookingInfo}>
                   <Icon name="paw" size={20} color="#fff" />
@@ -191,18 +215,28 @@ const BookingListScreen = ({ navigation }) => {
                 {item.dichvu && item.dichvu.length > 0 && (
                   <View style={styles.bookingInfo}>
                     <Icon name="cogs" size={20} color="#fff" />
-                    <Text style={styles.text}>
-                      Dịch vụ: {item.dichvu}
-                    </Text>
+                    <Text style={styles.text}>Dịch vụ: {item.dichvu}</Text>
                   </View>
                 )}
-              </TouchableOpacity>
+                {/* Hiển thị nút hủy nếu cần */}
+                {showCancelButton && (
+                  <TouchableOpacity
+                    style={styles.cancelButton}
+                    onPress={() => openCancelModal(item.idlichhen)}
+                  >
+                    <Text style={styles.cancelButtonText}>Hủy lịch hẹn</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
             )}
             keyExtractor={(item) => item.idlichhen.toString()}
             showsVerticalScrollIndicator={false}
           />
         ) : (
-          <Text style={styles.noBookingsText}>Không có lịch hẹn nào.</Text>
+          <View style={styles.noBookingsContainer}>
+            <Icon name="exclamation-circle" size={50} color="#FFCC33" />
+            <Text style={styles.noBookingsText}>Không có lịch hẹn nào.</Text>
+          </View>
         )}
       </View>
     );
@@ -210,20 +244,26 @@ const BookingListScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Quản lý lịch hẹn</Text>
+      {/* <Text style={styles.title}>Quản lý lịch hẹn</Text> */}
 
       <Tab.Navigator
         screenOptions={{
           tabBarLabelStyle: { fontSize: 12, color: "#333" },
-          tabBarIndicatorStyle: { backgroundColor: "#FFCC33" },
+          tabBarIndicatorStyle: { backgroundColor: "#333" },
           tabBarScrollEnabled: true,
           tabBarItemStyle: { width: 120 },
           tabBarShowIcon: true,
+          tabBarStyle: { backgroundColor: "#FFCC33" },
         }}
       >
         <Tab.Screen
           name="Chờ xác nhận"
-          children={() => <BookingTab fetchBookings={fetchPendingBookings} />}
+          children={() => (
+            <BookingTab
+              fetchBookings={fetchPendingBookings}
+              showCancelButton={true}
+            />
+          )}
           options={{
             tabBarLabel: "Chờ xác nhận",
             tabBarIcon: ({ color }) => (
@@ -234,7 +274,10 @@ const BookingListScreen = ({ navigation }) => {
         <Tab.Screen
           name="Đang thực hiện"
           children={() => (
-            <BookingTab fetchBookings={fetchInProgressBookings} />
+            <BookingTab
+              fetchBookings={fetchInProgressBookings}
+              showCancelButton={false}
+            />
           )}
           options={{
             tabBarLabel: "Đang thực hiện",
@@ -245,7 +288,12 @@ const BookingListScreen = ({ navigation }) => {
         />
         <Tab.Screen
           name="Hoàn thành"
-          children={() => <BookingTab fetchBookings={fetchCompletedBookings} />}
+          children={() => (
+            <BookingTab
+              fetchBookings={fetchCompletedBookings}
+              showCancelButton={false}
+            />
+          )}
           options={{
             tabBarLabel: "Hoàn thành",
             tabBarIcon: ({ color }) => (
@@ -255,7 +303,12 @@ const BookingListScreen = ({ navigation }) => {
         />
         <Tab.Screen
           name="Đã thanh toán"
-          children={() => <BookingTab fetchBookings={fetchPaidBookings} />}
+          children={() => (
+            <BookingTab
+              fetchBookings={fetchPaidBookings}
+              showCancelButton={false}
+            />
+          )}
           options={{
             tabBarLabel: "Đã thanh toán",
             tabBarIcon: ({ color }) => (
@@ -265,7 +318,12 @@ const BookingListScreen = ({ navigation }) => {
         />
         <Tab.Screen
           name="Đã hủy"
-          children={() => <BookingTab fetchBookings={fetchCancelledBookings} />}
+          children={() => (
+            <BookingTab
+              fetchBookings={fetchCancelledBookings}
+              showCancelButton={false}
+            />
+          )}
           options={{
             tabBarLabel: "Đã hủy",
             tabBarIcon: ({ color }) => (
@@ -274,6 +332,12 @@ const BookingListScreen = ({ navigation }) => {
           }}
         />
       </Tab.Navigator>
+      {/* Modal lý do hủy */}
+      <CancelModel
+        visible={showCancelModal}
+        onCancel={closeCancelModal}
+        onSubmit={submitCancelReason}
+      />
     </View>
   );
 };
@@ -281,7 +345,7 @@ const BookingListScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 0,
     backgroundColor: "#fff",
   },
   title: {
@@ -300,6 +364,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderRadius: 10,
     backgroundColor: "#FFCC33",
+    margin:10,
   },
   bookingInfo: {
     flexDirection: "row",
@@ -311,10 +376,17 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     color: "#333",
   },
+  noBookingsContainer: {
+    flexDirection: "column",  
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20, 
+  },
   noBookingsText: {
-    fontSize: 18,
+    fontSize: 16,
     textAlign: "center",
-    marginTop: 20,
+    marginTop: 10, 
+    color: "#333",
   },
   tabContainer: {
     flex: 1,

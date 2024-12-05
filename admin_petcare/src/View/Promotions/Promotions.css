@@ -1,7 +1,7 @@
 .promotions-content-section {
-    min-height: 100vh; /* Đảm bảo chiều cao tối thiểu là 100% chiều cao màn hình */
-    margin: 0;
-    box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng/chiều cao của phần tử */
+    min-height: 100vh;
+    margin-top: 80px;
+    box-sizing: border-box; 
     display: flex;
     flex-direction: column;
   }
@@ -12,29 +12,7 @@
     gap: 20px;
   }
   
-  .promotion-item {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    padding: 20px;
-  }
-  
-  .promotion-image {
-    max-width: 100%;
-    height: auto;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .promotion-item h3 {
-    color: #007bff;
-    margin: 10px 0;
-  }
-  
-  .promotion-item p {
-    color: #555;
-  }
+
   .promotions-edit {
     background-color: #3498db;
   color: white;
@@ -84,29 +62,24 @@
   }
   .promotions-header-section {
     display: flex;
-    justify-content: center;  /* Canh giữa tất cả các phần tử */
+    justify-content: center;  
     align-items: center;
     margin-bottom: 20px;
     position: relative;
   }
   
-  /* CSS cho tiêu đề */
-  .promotions-header-section h2 {
-    position: absolute;
-    left: 0; /* Căn trái tiêu đề */
-    margin: 0;
-  }
   
   /* CSS cho thanh tìm kiếm */
   .promotions-search-container {
     position: relative;
     width: 500px;
+    margin-bottom: 20px;
   }
   
   .promotions-search-icon {
     position: absolute;
     top: 40%;
-    right: 10px; /* Đặt icon ở bên phải */
+    right: 10px; 
     transform: translateY(-50%);
     color: #7f8c8d;
     font-size: 18px;

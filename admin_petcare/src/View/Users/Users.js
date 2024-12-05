@@ -94,10 +94,6 @@ const Users = () => {
 
   return (
     <div id="user" className="user-content-section">
-      <div className="user-header-section">
-        <h2>Quản lý Người Dùng</h2>
-
-        {/* Thanh tìm kiếm với icon */}
         <div className="user-search-container">
           <i className="fas fa-search user-search-icon"></i>
           <input
@@ -108,8 +104,6 @@ const Users = () => {
             className="user-search-input"
           />
         </div>
-      </div>
-
       <div id="userTable" className="user-table">
         {filteredUser.length > 0 ? (
           <table>

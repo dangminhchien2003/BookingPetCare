@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import AddService from './AddService';
-import EditService from './EditService';
-import './Services.css'; 
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import url from '../../ipconfig';
+import React, { useEffect, useState } from "react";
+import AddService from "./AddService";
+import EditService from "./EditService";
+import "./Services.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import url from "../../ipconfig";
 
 function Services() {
   const [services, setServices] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filteredServices, setFilteredServices] = useState([]);
   const [showAddService, setShowAddService] = useState(false);
   const [showEditService, setShowEditService] = useState(false);
@@ -17,29 +17,33 @@ function Services() {
     try {
       const response = await fetch(`${url}/api/getdichvu.php`);
       if (!response.ok) {
-        throw new Error('Lỗi khi tải dữ liệu');
+        throw new Error("Lỗi khi tải dữ liệu");
       }
       const data = await response.json();
       setServices(data);
       setFilteredServices(data);
     } catch (error) {
-      console.error('Lỗi khi tải dữ liệu:', error);
-      alert('Không thể tải danh sách dịch vụ. Vui lòng kiểm tra kết nối hoặc dữ liệu.');
+      console.error("Lỗi khi tải dữ liệu:", error);
+      alert(
+        "Không thể tải danh sách dịch vụ. Vui lòng kiểm tra kết nối hoặc dữ liệu."
+      );
     }
   };
 
   // Hàm tìm kiếm dịch vụ
   const searchServices = async (searchTerm) => {
     try {
-      const response = await fetch(`${url}/api/timkiemdichvu.php?searchTerm=${searchTerm}`);
+      const response = await fetch(
+        `${url}/api/timkiemdichvu.php?searchTerm=${searchTerm}`
+      );
       if (!response.ok) {
-        throw new Error('Lỗi khi tìm kiếm người dùng');
+        throw new Error("Lỗi khi tìm kiếm người dùng");
       }
       const data = await response.json();
       setFilteredServices(data);
     } catch (error) {
-      console.error('Lỗi khi tìm kiếm:', error);
-      alert('Không thể tìm kiếm người dùng. Vui lòng thử lại.');
+      console.error("Lỗi khi tìm kiếm:", error);
+      alert("Không thể tìm kiếm người dùng. Vui lòng thử lại.");
     }
   };
 
@@ -48,7 +52,7 @@ function Services() {
   }, []);
 
   useEffect(() => {
-    if (searchTerm.trim() === '') {
+    if (searchTerm.trim() === "") {
       setFilteredServices(services); // Nếu ô tìm kiếm rỗng, hiển thị tất cả dịch vụ
     } else {
       searchServices(searchTerm); // Gọi hàm tìm kiếm người dùng
@@ -65,7 +69,7 @@ function Services() {
     if (confirmDelete) {
       try {
         const response = await fetch(`${url}/api/xoadichvu.php?id=${id}`, {
-          method: 'DELETE',
+          method: "DELETE",
         });
 
         if (response.ok) {
@@ -77,33 +81,28 @@ function Services() {
           alert("Có lỗi xảy ra khi xóa dịch vụ: " + errorResult.message);
         }
       } catch (error) {
-        console.error('Lỗi khi xóa dịch vụ:', error);
-        alert('Đã xảy ra lỗi. Vui lòng thử lại.');
+        console.error("Lỗi khi xóa dịch vụ:", error);
+        alert("Đã xảy ra lỗi. Vui lòng thử lại.");
       }
     }
   };
-// Hàm format giá tiền
-const formatPrice = (price) => {
-  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-};
+  // Hàm format giá tiền
+  const formatPrice = (price) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
   return (
     <div id="services" className="services-content-section">
-      <div className="services-header-section">
-        <h2>Quản lý dịch vụ</h2>
-
-        {/* Thanh tìm kiếm với icon */}
-        <div className="services-search-container">
-          <i className="fas fa-search services-search-icon"></i>
-          <input
-            type="text"
-            placeholder="Tìm kiếm dịch vụ..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="services-search-input"
-          />
-        </div>
+      {/* Thanh tìm kiếm với icon */}
+      <div className="services-search-container">
+        <i className="fas fa-search services-search-icon"></i>
+        <input
+          type="text"
+          placeholder="Tìm kiếm dịch vụ..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="services-search-input"
+        />
       </div>
-
       <div id="servicesTable">
         {filteredServices.length > 0 ? (
           <table className="services-table">
@@ -127,11 +126,25 @@ const formatPrice = (price) => {
                   <td>{formatPrice(service.gia)}</td>
                   <td>{service.thoigianthuchien}</td>
                   <td>
-                    <img src={service.hinhanh} alt="Hình ảnh" style={{ width: '100px', height: '100px' }} />
+                    <img
+                      src={service.hinhanh}
+                      alt="Hình ảnh"
+                      style={{ width: "100px", height: "100px" }}
+                    />
                   </td>
                   <td>
-                    <button className="services-edit" onClick={() => editService(service)}>Sửa</button>
-                    <button className="services-delete" onClick={() => deleteService(service.iddichvu)}>Xóa</button>
+                    <button
+                      className="services-edit"
+                      onClick={() => editService(service)}
+                    >
+                      Sửa
+                    </button>
+                    <button
+                      className="services-delete"
+                      onClick={() => deleteService(service.iddichvu)}
+                    >
+                      Xóa
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -141,21 +154,26 @@ const formatPrice = (price) => {
           <p>Không có dịch vụ nào</p>
         )}
       </div>
-      
-      <button className="services-floating-btn" onClick={() => setShowAddService(true)}>+</button>
+
+      <button
+        className="services-floating-btn"
+        onClick={() => setShowAddService(true)}
+      >
+        +
+      </button>
 
       {showAddService && (
-        <AddService 
-          closeForm={() => setShowAddService(false)} 
-          onServiceAdded={loadServices} 
+        <AddService
+          closeForm={() => setShowAddService(false)}
+          onServiceAdded={loadServices}
         />
       )}
-      
+
       {showEditService && (
-        <EditService 
-          serviceToEdit={serviceToEdit} 
-          closeForm={() => setShowEditService(false)} 
-          onServiceUpdated={loadServices}  
+        <EditService
+          serviceToEdit={serviceToEdit}
+          closeForm={() => setShowEditService(false)}
+          onServiceUpdated={loadServices}
         />
       )}
     </div>

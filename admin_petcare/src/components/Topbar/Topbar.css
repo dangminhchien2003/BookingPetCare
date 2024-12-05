@@ -33,6 +33,11 @@
     align-items: center;
     gap: 15px;
   }
+  .user-name {
+    margin-right: 0px; 
+    font-weight: bold;
+    color: black;
+  }
   
   .topbar-actions .icon {
     color: #000000;

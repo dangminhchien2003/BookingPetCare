@@ -1,7 +1,7 @@
 .center-content-section {
-    min-height: 100vh; /* Đảm bảo chiều cao tối thiểu là 100% chiều cao màn hình */
-    margin: 0;
-    box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng/chiều cao của phần tử */
+    min-height: 100vh; 
+    margin-top: 80px;
+    box-sizing: border-box; 
     display: flex;
     flex-direction: column;
   }
@@ -83,32 +83,18 @@
     background-color: #2980b9;
   }
     
-  /* CSS cho header-section */
-  .center-header-section {
-    display: flex;
-    justify-content: center;  /* Canh giữa tất cả các phần tử */
-    align-items: center;
-    margin-bottom: 20px;
-    position: relative;
-  }
-  
-  /* CSS cho tiêu đề */
-  .center-header-section h2 {
-    position: absolute;
-    left: 0; /* Căn trái tiêu đề */
-    margin: 0;
-  }
   
   /* CSS cho thanh tìm kiếm */
   .center-search-container {
     position: relative;
     width: 500px;
+    margin-bottom: 20px;
   }
   
   .center-search-icon {
     position: absolute;
     top: 40%;
-    right: 10px; /* Đặt icon ở bên phải */
+    right: 10px; 
     transform: translateY(-50%);
     color: #7f8c8d;
     font-size: 18px;
@@ -116,7 +102,7 @@
   
   .center-search-input {
     width: 100%;
-    padding: 10px 40px 10px 10px; /* Thêm khoảng trống bên phải cho icon */
+    padding: 10px 40px 10px 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 18px;

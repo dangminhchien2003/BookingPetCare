@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,18 +7,20 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const ServiceDetails = ({ route, navigation }) => {
-  // Nhận các tham số từ route (được truyền khi nhấn vào dịch vụ)
   const { tenDichVu, hinhAnhDichVu, moTaDichVu, giaDichVu, thoiGianThucHien } =
     route.params;
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
   const formatPrice = (Gia) => {
     return Gia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
+
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Phần hình ảnh dịch vụ */}
         <View style={styles.imageContainer}>
           <Image style={styles.serviceImage} source={{ uri: hinhAnhDichVu }} />
@@ -27,21 +29,48 @@ const ServiceDetails = ({ route, navigation }) => {
         {/* Phần tiêu đề và mô tả dịch vụ */}
         <View style={styles.contentContainer}>
           <Text style={styles.serviceTitle}>{tenDichVu}</Text>
-          <Text style={styles.serviceDescription}>{moTaDichVu}</Text>
-          <Text style={styles.servicePrice}>Giá: {formatPrice(giaDichVu)} VND</Text>
-          <Text style={styles.serviceTime}>Thời gian: {thoiGianThucHien}</Text>
-        </View>
+          <Text style={styles.serviceDescription}>
+            {showFullDescription || moTaDichVu.length <= 200
+              ? moTaDichVu
+              : moTaDichVu.slice(0, 200) + "..."}
+          </Text>
+          {moTaDichVu.length > 200 && (
+            <TouchableOpacity
+              onPress={() => setShowFullDescription(!showFullDescription)}
+              style={styles.readMoreContainer}
+            >
+              <View style={styles.readMoreContent}>
+                <Text style={styles.readMoreButton}>
+                  {showFullDescription ? "Thu gọn" : "Xem thêm"}
+                </Text>
+                <Icon
+                  name={showFullDescription ? "chevron-up" : "chevron-down"}
+                  size={13}
+                  color="#f9b233"
+                  style={styles.readMoreIcon}
+                />
+              </View>
+            </TouchableOpacity>
+          )}
 
-        {/* Nút Đặt lịch */}
-        <View style={styles.bookingContainer}>
-          <TouchableOpacity
-            style={styles.bookingButton}
-            onPress={() => navigation.navigate("Booking")}
-          >
-            <Text style={styles.bookingButtonText}>Đặt lịch ngay</Text>
-          </TouchableOpacity>
+          <Text style={styles.servicePrice}>
+            Giá: {formatPrice(giaDichVu)} VND
+          </Text>
+          <Text style={styles.serviceTime}>
+            Thời gian thực hiện: {thoiGianThucHien}
+          </Text>
         </View>
       </ScrollView>
+
+      {/* Nút Đặt lịch */}
+      <View style={styles.bookingContainer}>
+        <TouchableOpacity
+          style={styles.bookingButton}
+          onPress={() => navigation.navigate("Booking")}
+        >
+          <Text style={styles.bookingButtonText}>Đặt lịch ngay</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -50,6 +79,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  scrollContent: {
+    paddingBottom: 80, // Tạo khoảng trống để tránh tràn vào nút cố định
   },
   imageContainer: {
     height: 250,
@@ -74,6 +106,22 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     color: "#333",
   },
+  readMoreContainer: {
+    marginTop: 5,
+  },
+  readMoreContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  readMoreButton: {
+    color: "#f9b233",
+    fontSize: 15,
+    fontWeight: "bold",
+    marginRight: 5,
+  },
+  readMoreIcon: {
+    marginTop: 2,
+  },
   servicePrice: {
     fontSize: 18,
     fontWeight: "bold",
@@ -85,8 +133,10 @@ const styles = StyleSheet.create({
     color: "#555",
   },
   bookingContainer: {
-    marginTop: 20,
-    paddingHorizontal: 20,
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    padding: 20,
   },
   bookingButton: {
     backgroundColor: "#f9b233",
