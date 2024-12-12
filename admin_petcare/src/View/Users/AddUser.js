@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './AddUser.css';
 import url from '../../ipconfig';
+import { toast} from "react-toastify";
 
 function AddUser({ closeForm, onUserAdded }) {
   const [user, setUser] = useState({
@@ -35,7 +36,7 @@ function AddUser({ closeForm, onUserAdded }) {
       console.log(result); // Kiểm tra kết quả từ API
   
       if (response.ok) {
-        alert(result.message); // Hiển thị thông báo thành công
+        toast.success(result.message); // Hiển thị thông báo thành công
         onUserAdded(); // Gọi callback để tải lại danh sách dịch vụ
         closeForm();
         setUser({
@@ -47,11 +48,11 @@ function AddUser({ closeForm, onUserAdded }) {
           vaitro: '0' // Đặt lại giá trị mặc định cho vai trò
         });
       } else {
-        alert("Có lỗi xảy ra: " + result.message); // Hiển thị thông báo lỗi nếu có
+        toast.error("Có lỗi xảy ra: " + result.message); // Hiển thị thông báo lỗi nếu có
       }
     } catch (error) {
       console.error('Lỗi khi thêm người dùng:', error);
-      alert('Đã xảy ra lỗi. Vui lòng thử lại.');
+      toast.error('Đã xảy ra lỗi. Vui lòng thử lại.');
     }
   };
   

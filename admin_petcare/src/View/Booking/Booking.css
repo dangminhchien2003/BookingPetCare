@@ -1,66 +1,97 @@
 .booking-content-section {
   min-height: 100vh;
-  margin-top: 80px;
+  margin-top: 70px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
 }
 
-/* CSS cho thanh tìm kiếm */
-.bookings-search-container {
-  position: relative;
-  width: 500px;
+.date-filter-container {
+  display: flex;
   margin-bottom: 20px;
+  gap: 10px;
+  padding: 15px;
 }
-
-.bookings-search-icon {
-  position: absolute;
-  top: 40%;
-  right: 10px;
-  transform: translateY(-50%);
-  color: #7f8c8d;
-  font-size: 18px;
+.date-filter-container label {
+  margin-right: 10px;
+  font-size: 16px;
 }
-
-.bookings-search-input {
-  width: 100%;
-  padding: 10px 40px 10px 10px;
-  border-radius: 5px;
+.date-filter-container label {
+  font-weight: bold;
+}
+.date-input {
+  padding: 5px;
+  margin-right: 10px;
   border: 1px solid #ccc;
-  font-size: 18px;
-  transition: border-color 0.3s ease;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 150px;
 }
 
-.bookings-search-input:focus {
-  border-color: #3498db;
-  outline: none;
+.search-button,
+.reload-button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.search-button {
+  background-color: #4CAF50; 
+  color: white;
+}
+
+.search-button:hover {
+  background-color: #45a049; 
+}
+
+.reload-button {
+  background-color: #f44336; 
+  color: white;
+}
+
+.reload-button:hover {
+  background-color: #e53935; 
+}
+
+.search-button, .reload-button {
+  height: 40px;
 }
 .status-tabs {
   display: flex;
   margin-bottom: 20px;
 }
 
-.status-tab {
-  padding: 10px 20px;
-  margin-right: 10px;
+.status-tabs .status-tab {
   background-color: #18a71d;
+  padding: 10px 20px;
   border: 1px solid #ddd;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.booking-actions {
-  display: flex;
-  flex-direction: column; 
-  gap: 10px; 
-}
-.status-tab.active {
+.status-tabs .status-tab:hover {
   background-color: #007bff;
   color: white;
-  border: 1px solid #007bff;
 }
+
+.status-tabs .status-tab.Mui-selected {
+  background-color: #007bff;
+  color: white;
+  text-decoration: none !important;
+}
+
+.status-tab:hover {
+  background-color: #16a11d;
+}
+
 .confirm-button {
   background-color: #5baf5d;
-  color: #ffffff; 
+  color: #ffffff;
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
@@ -77,7 +108,7 @@
 }
 .cancel-button {
   background-color: #ff4d4f;
-  color: #ffffff; /* Màu chữ */
+  color: #ffffff; 
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
@@ -92,9 +123,9 @@
 .cancel-button:active {
   background-color: #990000;
 }
-.complete-button{
+.complete-button {
   background-color: orange;
-  color: #ffffff; 
+  color: #ffffff;
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
@@ -107,6 +138,22 @@
 
 .complete-button:active {
   background-color: rgb(255, 123, 0);
+}
+.pay-button {
+  background-color: blue;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.pay-button:hover {
+  background-color: rgb(13, 0, 199);
+}
+
+.pay-button:active {
+  background-color: rgb(13, 0, 199);
 }
 .modal-overlay {
   position: fixed;
@@ -139,12 +186,32 @@ textarea {
   justify-content: space-between;
 }
 
-button {
+.button-modal-actions {
+  background-color: #5baf5d;
+  color: #ffffff;
   padding: 10px 20px;
   border: none;
+  border-radius: 4px;
+  font-size: 15px;
   cursor: pointer;
 }
 
-button:disabled {
+.button-modal-actions:disabled {
   background-color: gray;
 }
+.close-button {
+  background-color: #ff4d4f;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.close-button:hover {
+  background-color: #ee0307;
+}
+
+
+
+

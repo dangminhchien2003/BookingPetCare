@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './EditCenter.css';
 import url from '../../ipconfig';
+import { toast } from "react-toastify";
 
 function EditCenter({ CenterToEdit, closeForm, onCenterUpdated }) {
   const [center, setCenter] = useState(CenterToEdit); // Khởi tạo state center từ CenterToEdit
@@ -40,7 +41,7 @@ function EditCenter({ CenterToEdit, closeForm, onCenterUpdated }) {
       const result = await response.json();
       
       if (response.ok) {
-        alert(result.message);
+        toast.success(result.message);
         onCenterUpdated(); // Gọi callback để cập nhật danh sách trung tam
         closeForm(); // Đóng modal sau khi cập nhật thành công
       } else {
@@ -48,7 +49,7 @@ function EditCenter({ CenterToEdit, closeForm, onCenterUpdated }) {
       }
     } catch (error) {
       console.error('Lỗi khi kết nối tới server:', error);
-      alert('Đã xảy ra lỗi khi kết nối tới server.');
+      toast.error('Đã xảy ra lỗi khi kết nối tới server.');
     }
   };
 

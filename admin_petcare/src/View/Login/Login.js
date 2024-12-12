@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import petcareImage from "../../assets/images/petlogo.avif"; 
 import url from "../../ipconfig";
+import { toast } from "react-toastify";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -41,13 +42,14 @@ const AdminLogin = () => {
       if (data && data.success) {
         // Đăng nhập thành công - lưu thông tin người dùng vào localStorage
         localStorage.setItem("user", JSON.stringify({
+          idnguoidung: data.user.idnguoidung,
           tennguoidung: data.user.tennguoidung,
           email: data.user.email,
           sodienthoai: data.user.sodienthoai,
           diachi: data.user.diachi,
         }));
-        alert("Đăng nhập thành công!");
-        navigate("/dashboard");
+        toast.success("Đăng nhập thành công!");
+        navigate("/dashboard", { state: { toastMessage: "Đăng nhập thành công!" } });
       } else {
         // Nếu API trả về lỗi
         setError(data.message || "Sai thông tin email hoặc mật khẩu. Vui lòng thử lại.");

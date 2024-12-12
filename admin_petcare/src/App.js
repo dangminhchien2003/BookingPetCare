@@ -26,6 +26,7 @@ import LoyaltyIcon from "@mui/icons-material/Loyalty";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
+import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 
 import { Box } from "@mui/material";
 import "./App.css";
@@ -59,7 +60,7 @@ function App() {
     {
       title: "Quản lý dịch vụ-trung tâm",
       text: "Dịch vụ-Trung tâm",
-      icon: <SettingsIcon />,
+      icon: <BusinessCenterIcon />,
       link: "/servicecenter",
     },
     {

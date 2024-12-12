@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './AddCenter.css'; 
 import url from '../../ipconfig';
+import { toast } from "react-toastify";
 
 function AddCenter({ closeForm, onCenterAdded }) {
   const [center, setCenter] = useState({
@@ -36,7 +37,7 @@ function AddCenter({ closeForm, onCenterAdded }) {
       console.log(result); // Kiểm tra kết quả từ API
   
       if (response.ok) {
-        alert(result.message); // Hiển thị thông báo thành công
+        toast.success(result.message); // Hiển thị thông báo thành công
         onCenterAdded(); // Gọi callback để tải lại danh sách dịch vụ
         closeForm();
         setCenter({
@@ -54,7 +55,7 @@ function AddCenter({ closeForm, onCenterAdded }) {
       }
     } catch (error) {
       console.error('Lỗi khi thêm trung tâm:', error);
-      alert('Đã xảy ra lỗi. Vui lòng thử lại.');
+      toast.error('Đã xảy ra lỗi. Vui lòng thử lại.');
     }
   };
   

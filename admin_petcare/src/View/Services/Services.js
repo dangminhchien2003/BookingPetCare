@@ -4,6 +4,8 @@ import EditService from "./EditService";
 import "./Services.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import url from "../../ipconfig";
+import { toast, ToastContainer } from "react-toastify";
+import useDebounce from "../../common/useDebounce";
 
 function Services() {
   const [services, setServices] = useState([]);
@@ -12,6 +14,8 @@ function Services() {
   const [showAddService, setShowAddService] = useState(false);
   const [showEditService, setShowEditService] = useState(false);
   const [serviceToEdit, setServiceToEdit] = useState(null);
+
+  const debounceKeyword = useDebounce(searchTerm, 500);
 
   const loadServices = async () => {
     try {
@@ -52,12 +56,12 @@ function Services() {
   }, []);
 
   useEffect(() => {
-    if (searchTerm.trim() === "") {
+    if (debounceKeyword.trim() === "") {
       setFilteredServices(services); // Nếu ô tìm kiếm rỗng, hiển thị tất cả dịch vụ
     } else {
-      searchServices(searchTerm); // Gọi hàm tìm kiếm người dùng
+      searchServices(debounceKeyword); // Gọi hàm tìm kiếm người dùng
     }
-  }, [searchTerm, services]);
+  }, [debounceKeyword, services]);
 
   const editService = (service) => {
     setServiceToEdit(service);
@@ -74,7 +78,7 @@ function Services() {
 
         if (response.ok) {
           const result = await response.json();
-          alert(result.message);
+          toast.success(result.message);
           loadServices();
         } else {
           const errorResult = await response.json();
@@ -82,7 +86,7 @@ function Services() {
         }
       } catch (error) {
         console.error("Lỗi khi xóa dịch vụ:", error);
-        alert("Đã xảy ra lỗi. Vui lòng thử lại.");
+        toast.error("Đã xảy ra lỗi. Vui lòng thử lại.");
       }
     }
   };
@@ -92,6 +96,7 @@ function Services() {
   };
   return (
     <div id="services" className="services-content-section">
+      <ToastContainer style={{top:70}}/>
       {/* Thanh tìm kiếm với icon */}
       <div className="services-search-container">
         <i className="fas fa-search services-search-icon"></i>

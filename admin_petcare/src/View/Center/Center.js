@@ -4,15 +4,19 @@ import AddCenter from "./AddCenter";
 import EditCenter from "./EditCenter";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import url from "../../ipconfig";
+import { toast, ToastContainer } from "react-toastify";
+import useDebounce from "../../common/useDebounce";
 
 const Center = () => {
-  const [centers, setCenters] = useState([]); // Tạo state để lưu danh sách trung tâm
-  const [error, setError] = useState(null); // State để lưu lỗi nếu có
+  const [centers, setCenters] = useState([]); 
+  const [error, setError] = useState(null); 
   const [showAddCenter, setShowAddCenter] = useState(false);
   const [showEditCenter, setShowEditCenter] = useState(false);
   const [CenterToEdit, setCenterToEdit] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(""); // State cho từ khóa tìm kiếm
-  const [filteredCenters, setFilteredCenters] = useState([]); // State cho danh sách trung tâm đã lọc
+  const [searchTerm, setSearchTerm] = useState(""); 
+  const [filteredCenters, setFilteredCenters] = useState([]);
+
+  const debounceKeyword = useDebounce(searchTerm, 500);
 
   // Hàm load danh sách trung tâm từ API
   const loadCenters = async () => {
@@ -51,12 +55,12 @@ const Center = () => {
   }, []);
 
   useEffect(() => {
-    if (searchTerm.trim() === "") {
-      setFilteredCenters(centers); // Nếu ô tìm kiếm rỗng, hiển thị tất cả dịch vụ
+    if (debounceKeyword.trim() === "") {
+      setFilteredCenters(centers);
     } else {
-      searchCenter(searchTerm); // Gọi hàm tìm kiếm người dùng
+      searchCenter(debounceKeyword); 
     }
-  }, [searchTerm, centers]);
+  }, [debounceKeyword, centers]);
 
   const editCenter = (Center) => {
     setCenterToEdit(Center);
@@ -75,7 +79,7 @@ const Center = () => {
 
         if (response.ok) {
           const result = await response.json();
-          alert(result.message);
+          toast.success(result.message);
           loadCenters();
         } else {
           const errorResult = await response.json();
@@ -83,13 +87,14 @@ const Center = () => {
         }
       } catch (error) {
         console.error("Lỗi khi xóa trung tâm:", error);
-        alert("Đã xảy ra lỗi. Vui lòng thử lại.");
+        toast.error("Đã xảy ra lỗi. Vui lòng thử lại.");
       }
     }
   };
 
   return (
     <div id="center" className="center-content-section">
+      <ToastContainer style={{top:70}}/>
       {/* Hiển thị lỗi nếu có */}
       {error && <p style={{ color: "red" }}>{error}</p>}
 

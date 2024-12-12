@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './EditService.css';
 import url from '../../ipconfig';
-
+import { toast} from "react-toastify";
 function EditService({ serviceToEdit, closeForm, onServiceUpdated }) {
   const [service, setService] = useState(serviceToEdit); // Khởi tạo state service từ serviceToEdit
 
@@ -37,7 +37,7 @@ function EditService({ serviceToEdit, closeForm, onServiceUpdated }) {
       const result = await response.json();
       
       if (response.ok) {
-        alert(result.message);
+        toast.success(result.message);
         onServiceUpdated(); // Gọi callback để cập nhật danh sách dịch vụ
         closeForm(); // Đóng modal sau khi cập nhật thành công
       } else {
@@ -45,7 +45,7 @@ function EditService({ serviceToEdit, closeForm, onServiceUpdated }) {
       }
     } catch (error) {
       console.error('Lỗi khi kết nối tới server:', error);
-      alert('Đã xảy ra lỗi khi kết nối tới server.');
+      toast.error('Đã xảy ra lỗi khi kết nối tới server.');
     }
   };
 

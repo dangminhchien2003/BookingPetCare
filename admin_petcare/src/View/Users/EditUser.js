@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import './EditService.css';
 import url from '../../ipconfig';
+import { toast} from "react-toastify";
 
 function EditUser({ userToEdit, closeForm, onUserUpdated }) {
   const [user, setUser] = useState(userToEdit); // Khởi tạo state user từ userToEdit
@@ -38,11 +39,11 @@ function EditUser({ userToEdit, closeForm, onUserUpdated }) {
       const result = await response.json();
       
       if (response.ok) {
-        alert(result.message);
+        toast.success(result.message);
         onUserUpdated(); // Gọi callback để cập nhật danh sách 
         closeForm(); // Đóng modal sau khi cập nhật thành công
       } else {
-        alert(`Lỗi khi cập nhật: ${result.message}`);
+        toast.error(`Lỗi khi cập nhật: ${result.message}`);
       }
     } catch (error) {
       console.error('Lỗi khi kết nối tới server:', error);
@@ -65,8 +66,8 @@ function EditUser({ userToEdit, closeForm, onUserUpdated }) {
           <label>Email:</label>
           <input type="text" name="email" value={user.email} onChange={handleChange} required />
 
-          <label>Mật Khẩu:</label>
-          <input type="text" name="matkhau" value={user.matkhau} onChange={handleChange} required />
+          {/* <label>Mật Khẩu:</label>
+          <input type="text" name="matkhau" value={user.matkhau} onChange={handleChange} required /> */}
 
           <label>Số Điện Thoại:</label>
           <input type="text" name="sodienthoai" value={user.sodienthoai} onChange={handleChange} required />

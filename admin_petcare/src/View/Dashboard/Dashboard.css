@@ -1,13 +1,12 @@
-
 #dashboard {
     padding: 20px;
-    margin-top: 80px;
+    margin-top: 70px;
   }
   
   .card-container {
     display: flex;
-    flex-direction: row; /* Sắp xếp theo chiều ngang */
-    gap: 20px; /* Khoảng cách giữa các thẻ */
+    flex-direction: row; 
+    gap: 20px; 
     margin-bottom: 20px;
   }
   
@@ -54,4 +53,58 @@
     max-width: 75%;
     margin: 0 auto;
   }
+  .spinner {
+    width: 30px;
+    height: 30px;
+    animation: spin 1s ease infinite;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
   
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .dashboard-chart-container {
+    display: flex;
+    justify-content: center;  
+    align-items: center;      
+    width: 100%;             
+    height: 450px;          
+    margin-top: 20px;        
+  }
+  
+.select {
+  font-size: 16px;
+  padding: 10px;
+  border: 2px solid #4CAF50;  
+  border-radius: 8px;         
+  background-color: #f9f9f9;  
+  color: #333;               
+  transition: all 0.3s ease;  
+  cursor: pointer;       
+  margin-left: 10px;     
+}
+
+.select:hover {
+  border-color: #45a049;      
+  background-color: #e8f5e9;  
+}
+
+.select:focus {
+  outline: none;              
+  border-color: #2e7d32;    
+  background-color: #e8f5e9;  
+}
+
+.label-container {
+  margin-right: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #555;  
+  text-align: center;
+}

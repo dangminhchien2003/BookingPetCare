@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './AddServices.css'; 
 import url from '../../ipconfig';
+import { toast } from "react-toastify";
 
 function AddService({ closeForm, onServiceAdded }) {
   const [service, setService] = useState({
@@ -34,7 +35,7 @@ function AddService({ closeForm, onServiceAdded }) {
       console.log(result); // Kiểm tra kết quả từ API
   
       if (response.ok) {
-        alert(result.message); // Hiển thị thông báo thành công
+        toast.success(result.message); // Hiển thị thông báo thành công
         onServiceAdded(); // Gọi callback để tải lại danh sách dịch vụ
         closeForm();
         setService({
@@ -49,7 +50,7 @@ function AddService({ closeForm, onServiceAdded }) {
       }
     } catch (error) {
       console.error('Lỗi khi thêm dịch vụ:', error);
-      alert('Đã xảy ra lỗi. Vui lòng thử lại.');
+      toast.error('Đã xảy ra lỗi. Vui lòng thử lại.');
     }
   };
   

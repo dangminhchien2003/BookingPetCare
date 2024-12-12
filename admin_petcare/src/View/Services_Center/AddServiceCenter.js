@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import './AddServiceCenter.css'; 
-import url from '../../ipconfig';
+import React, { useEffect, useState } from "react";
+import "./AddServiceCenter.css";
+import url from "../../ipconfig";
+import { toast } from "react-toastify";
 
 function AddServiceCenter({ closeForm, onServiceCenterAdded }) {
   const [serviceCenter, setServiceCenter] = useState({
-    iddichvu: '',
-    idtrungtam: '',
+    iddichvu: "",
+    idtrungtam: "",
   });
 
   const [services, setServices] = useState([]); // State to hold services
@@ -24,8 +25,10 @@ function AddServiceCenter({ closeForm, onServiceCenterAdded }) {
         const centersData = await centersResponse.json();
         setCenters(centersData);
       } catch (error) {
-        console.error('Lỗi khi tải dữ liệu dịch vụ hoặc trung tâm:', error);
-        alert('Không thể tải danh sách dịch vụ hoặc trung tâm. Vui lòng kiểm tra kết nối hoặc dữ liệu.');
+        console.error("Lỗi khi tải dữ liệu dịch vụ hoặc trung tâm:", error);
+        toast.error(
+          "Không thể tải danh sách dịch vụ hoặc trung tâm. Vui lòng kiểm tra kết nối hoặc dữ liệu."
+        );
       }
     };
 
@@ -39,55 +42,61 @@ function AddServiceCenter({ closeForm, onServiceCenterAdded }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Kiểm tra dữ liệu trước khi gửi
     if (!serviceCenter.iddichvu || !serviceCenter.idtrungtam) {
-        alert('Vui lòng nhập đầy đủ thông tin!');
-        return;
+      toast.warn("Vui lòng nhập đầy đủ thông tin!");
+      return;
     }
-
-    console.log("Dữ liệu gửi đi:", JSON.stringify(serviceCenter)); // Kiểm tra dữ liệu
-
+  
     try {
-        const response = await fetch(`${url}/api/themdichvutrungtam.php`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(serviceCenter),
+      const response = await fetch(`${url}/api/themdichvutrungtam.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(serviceCenter),
+      });
+  
+      const result = await response.json(); // Lấy dữ liệu trả về từ API
+  
+      if (response.ok && result.message) {
+        // Trường hợp thêm thành công
+        toast.success(result.message); 
+        onServiceCenterAdded(); 
+        closeForm(); // Đóng form
+        setServiceCenter({
+          iddichvu: "",
+          idtrungtam: "",
         });
-
-        const result = await response.json();
-        console.log(result); // Kiểm tra kết quả từ API
-
-        if (response.ok) {
-            alert(result.message); // Hiển thị thông báo thành công
-            onServiceCenterAdded(); // Gọi callback để tải lại danh sách dịch vụ
-            closeForm();
-            setServiceCenter({
-                iddichvu: '',
-                idtrungtam: '',
-            });
-        } else {
-            alert("Có lỗi xảy ra: " + result.message); // Hiển thị thông báo lỗi nếu có
-        }
+      } else if (result.error) {
+        // Trường hợp API trả về lỗi cụ thể
+        toast.error(result.error); // Hiển thị lỗi từ API
+      } else {
+        toast.error("Đã xảy ra lỗi không xác định."); // Lỗi không rõ nguyên nhân
+      }
     } catch (error) {
-        console.error('Lỗi khi thêm dịch vụ:', error);
-        alert('Đã xảy ra lỗi. Vui lòng thử lại.');
+      // Lỗi khi gửi request hoặc kết nối
+      console.error("Lỗi khi thêm dịch vụ:", error);
+      toast.error("Đã xảy ra lỗi. Vui lòng thử lại.");
     }
   };
-
+  
+  
   return (
     <div className="modal">
+      {/* <ToastContainer style={{ top: 70 }} /> */}
       <div className="modal-content">
-        <span className="close-btn" onClick={closeForm}>&times;</span>
+        <span className="close-btn" onClick={closeForm}>
+          &times;
+        </span>
         <h3>Thêm Dịch Vụ Trung Tâm</h3>
         <form onSubmit={handleSubmit}>
-          <label>ID Dịch Vụ:</label>
-          <select 
-            name="iddichvu" 
-            value={serviceCenter.iddichvu} 
-            onChange={handleChange} 
+          <label style={{marginLeft:10}}>ID Dịch Vụ:</label>
+          <select className="select-container"
+            name="iddichvu"
+            value={serviceCenter.iddichvu}
+            onChange={handleChange}
             required
           >
             <option value="">Chọn dịch vụ...</option>
@@ -98,11 +107,11 @@ function AddServiceCenter({ closeForm, onServiceCenterAdded }) {
             ))}
           </select>
 
-          <label>ID Trung Tâm:</label>
-          <select 
-            name="idtrungtam" 
-            value={serviceCenter.idtrungtam} 
-            onChange={handleChange} 
+          <label style={{marginLeft:10}}>ID Trung Tâm:</label>
+          <select className="select-container"
+            name="idtrungtam"
+            value={serviceCenter.idtrungtam}
+            onChange={handleChange}
             required
           >
             <option value="">Chọn trung tâm...</option>

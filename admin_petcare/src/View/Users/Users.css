@@ -1,7 +1,7 @@
 .user-content-section {
-  min-height: 100vh; /* Đảm bảo chiều cao tối thiểu là 100% chiều cao màn hình */
+  min-height: 100vh;
   margin-top: 80px;
-  box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng/chiều cao của phần tử */
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
 }
@@ -100,17 +100,15 @@ button.user-delete:hover {
   
 }
 
-
 /* CSS cho thanh tìm kiếm */
 .user-search-container {
   position: relative;
   width: 500px;
 }
-
 .user-search-icon {
   position: absolute;
   top: 40%;
-  right: 10px; /* Đặt icon ở bên phải */
+  right: 10px; 
   transform: translateY(-50%);
   color: #7f8c8d;
   font-size: 18px;
@@ -118,7 +116,7 @@ button.user-delete:hover {
 
 .user-search-input {
   width: 100%;
-  padding: 10px 40px 10px 10px; /* Thêm khoảng trống bên phải cho icon */
+  padding: 10px 40px 10px 10px; 
   border-radius: 5px;
   border: 1px solid #ccc;
   font-size: 18px;
