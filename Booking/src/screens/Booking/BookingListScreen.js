@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import url from "../../../ipconfig";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import CancelModel from "../../compoment/CancelModal/CancelModel";
+import PaymentScreen from "../../screens/PaymentScreen/PaymentScreen";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -144,6 +145,10 @@ const BookingListScreen = ({ navigation }) => {
     setShowCancelModal(true);
   };
 
+  const openPaymentModal = (booking) => {
+    navigation.navigate("PaymentScreen", { booking });
+  };
+
   const trangthai = {
     0: "Chờ xác nhận",
     1: "Đang thực hiện",
@@ -152,7 +157,11 @@ const BookingListScreen = ({ navigation }) => {
     4: "Đã hủy",
   };
 
-  const BookingTab = ({ fetchBookings, showCancelButton }) => {
+  const BookingTab = ({
+    fetchBookings,
+    showCancelButton,
+    showPaymentButton,
+  }) => {
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -227,6 +236,15 @@ const BookingListScreen = ({ navigation }) => {
                     <Text style={styles.cancelButtonText}>Hủy lịch hẹn</Text>
                   </TouchableOpacity>
                 )}
+                {/* Hiển thị nút thanh toan nếu cần */}
+                {showPaymentButton && (
+                  <TouchableOpacity
+                    style={styles.cancelButton}
+                    onPress={() => openPaymentModal(item)}
+                  >
+                    <Text style={styles.cancelButtonText}>Thanh toán</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             )}
             keyExtractor={(item) => item.idlichhen.toString()}
@@ -262,6 +280,7 @@ const BookingListScreen = ({ navigation }) => {
             <BookingTab
               fetchBookings={fetchPendingBookings}
               showCancelButton={true}
+              showPaymentButton={false}
             />
           )}
           options={{
@@ -277,6 +296,7 @@ const BookingListScreen = ({ navigation }) => {
             <BookingTab
               fetchBookings={fetchInProgressBookings}
               showCancelButton={false}
+              showPaymentButton={false}
             />
           )}
           options={{
@@ -292,6 +312,7 @@ const BookingListScreen = ({ navigation }) => {
             <BookingTab
               fetchBookings={fetchCompletedBookings}
               showCancelButton={false}
+              showPaymentButton={true}
             />
           )}
           options={{
@@ -307,6 +328,7 @@ const BookingListScreen = ({ navigation }) => {
             <BookingTab
               fetchBookings={fetchPaidBookings}
               showCancelButton={false}
+              showPaymentButton={false}
             />
           )}
           options={{
@@ -322,6 +344,7 @@ const BookingListScreen = ({ navigation }) => {
             <BookingTab
               fetchBookings={fetchCancelledBookings}
               showCancelButton={false}
+              showPaymentButton={false}
             />
           )}
           options={{
@@ -364,7 +387,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderRadius: 10,
     backgroundColor: "#FFCC33",
-    margin:10,
+    margin: 10,
   },
   bookingInfo: {
     flexDirection: "row",
@@ -377,15 +400,15 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   noBookingsContainer: {
-    flexDirection: "column",  
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20, 
+    marginTop: 20,
   },
   noBookingsText: {
     fontSize: 16,
     textAlign: "center",
-    marginTop: 10, 
+    marginTop: 10,
     color: "#333",
   },
   tabContainer: {

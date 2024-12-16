@@ -28,9 +28,9 @@ const LoginScreen = ({ navigation }) => {
       console.log('Phản hồi từ API:', json);
 
       if (json.success) {
-        Alert.alert('Thành công', 'Đăng nhập thành công');
+        // Alert.alert('Thành công', 'Đăng nhập thành công');
 
-        // Save user info from response
+        // lưu thông tin người dùng
         const userInfo = {
           idnguoidung: json.user.idnguoidung,
           tennguoidung: json.user.tennguoidung,
@@ -99,7 +99,7 @@ const LoginScreen = ({ navigation }) => {
           {/* Eye Icon */}
           <TouchableOpacity 
             style={styles.eyeIcon} 
-            onPress={() => setIsPasswordVisible(!isPasswordVisible)} // Toggle password visibility
+            onPress={() => setIsPasswordVisible(!isPasswordVisible)} 
           >
             <Icon name={isPasswordVisible ? 'visibility' : 'visibility-off'} size={24} color="#f9b233" />
           </TouchableOpacity>

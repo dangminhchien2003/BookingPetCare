@@ -18,17 +18,13 @@ const Sidebar = ({ items }) => {
     <Drawer classes={{ paper: "sidebar-container" }} variant="permanent">
       <div className="sidebar-header">
         <div className="sidebar-logo-container">
-          <img 
-            src={logoPet}
-            alt="Petcare Logo" 
-            className="sidebar-logo" 
-          />
+          <img src={logoPet} alt="Petcare Logo" className="sidebar-logo" />
           <h2 className="sidebar-title">Quản trị hệ thống</h2>
         </div>
       </div>
 
       <List className="sidebar-list">
-        {items.slice(0, items.length - 1).map((item, index) => (
+        {items.map((item, index) => (
           <ListItem
             button
             component={Link}

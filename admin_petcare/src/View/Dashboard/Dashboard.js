@@ -16,6 +16,9 @@ import {
   Tooltip,
   Legend,
   Bar,
+  LineChart,
+  Line,
+  ResponsiveContainer,
 } from "recharts";
 import url from "../../ipconfig";
 import { RiLoader2Fill } from "react-icons/ri";
@@ -30,6 +33,22 @@ const Dashboard = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1); // Tháng hiện tại
   const [year, setYear] = useState(new Date().getFullYear()); // Năm hiện tại
   const [data, setData] = useState([]); // Dữ liệu biểu đồ
+  // const [revenueData, setRevenueData] = useState([]); // Dữ liệu doanh thu
+
+  const dataa = [
+    { month: "Tháng 1", revenue: 12000 },
+    { month: "Tháng 2", revenue: 15000 },
+    { month: "Tháng 3", revenue: 17000 },
+    { month: "Tháng 4", revenue: 20000 },
+    { month: "Tháng 5", revenue: 22000 },
+    { month: "Tháng 6", revenue: 25000 },
+    { month: "Tháng 7", revenue: 23000 },
+    { month: "Tháng 8", revenue: 24000 },
+    { month: "Tháng 9", revenue: 26000 },
+    { month: "Tháng 10", revenue: 27000 },
+    { month: "Tháng 11", revenue: 30000 },
+    { month: "Tháng 12", revenue: 3000 },
+  ];
 
   const fetchData = (selectedMonth, selectedYear) => {
     setLoading(true);
@@ -174,32 +193,63 @@ const Dashboard = () => {
         </label>
       </div>
 
-      <div style={{ textAlign: "center" }}>
-        <text>Biểu đồ Thống kê Người Dùng và Lịch Hẹn theo tháng</text>
+      <div style={{ display: "flex", justifyContent: "center", gap: "20px" }}>
+        <div style={{ flex: 1 }}>
+          <h4 style={{ textAlign: "center" }}>
+            Biểu đồ Thống kê Người Dùng và Lịch Hẹn
+          </h4>
+          {loading ? (
+            <div style={{ textAlign: "center" }}>
+              <RiLoader2Fill className="spinner" />
+              <p>Đang tải dữ liệu...</p>
+            </div>
+          ) : (
+            <BarChart
+              width={650}
+              height={380}
+              data={data}
+              style={{ margin: "0 auto" }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="users" fill="#8884d8" name="Số người dùng" />
+              <Bar dataKey="bookings" fill="#82ca9d" name="Số lịch hẹn" />
+            </BarChart>
+          )}
+        </div>
+
+        <div style={{ flex: 1 }}>
+          <h4 style={{ textAlign: "center" }}>Biểu đồ Doanh thu theo tháng</h4>
+          {loading ? (
+            <div style={{ textAlign: "center" }}>
+              <RiLoader2Fill className="spinner" />
+              <p>Đang tải dữ liệu...</p>
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height={380}>
+              <LineChart
+                data={dataa}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#8884d8"
+                  activeDot={{ r: 8 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          )}
+        </div>
       </div>
-      {loading ? (
-        <div style={{ textAlign: "center" }}>
-          <RiLoader2Fill className="spinner"> </RiLoader2Fill>
-          <p>Đang tải dữ liệu...</p>
-        </div>
-      ) : (
-        <div className="dashboard-chart-container">
-          <BarChart
-            width={900}
-            height={400}
-            data={data}
-            // margin={{ top: 15, right: 10, left: 150, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip /> 
-            <Legend />
-            <Bar dataKey="users" fill="#8884d8" name="Số người dùng" />
-            <Bar dataKey="bookings" fill="#82ca9d" name="Số lịch hẹn" />
-          </BarChart>
-        </div>
-      )}
     </div>
   );
 };

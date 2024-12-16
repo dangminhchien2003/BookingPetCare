@@ -114,6 +114,8 @@
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
+  margin-top: 10px;
+  width: 105px;
 }
 
 .cancel-button:hover {

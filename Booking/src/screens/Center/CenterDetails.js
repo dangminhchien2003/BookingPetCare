@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 20,
-    paddingBottom: 80, // Thêm khoảng trống để không bị nút che nội dung
+    paddingBottom: 80, 
   },
   centerImage: {
     width: "100%",

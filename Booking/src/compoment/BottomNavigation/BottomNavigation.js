@@ -19,6 +19,9 @@ import EditPet from "../../screens/Pet/EditPet";
 import ServiceDetails from "../../screens/Service/ServiceDetails";
 import ChangePasswordScreen from "../../screens/ChangePassword/ChangePasswordScreen";
 import SupportScreen from "../../screens/Support/SupportScreen";
+import PaymentScreen from "../../screens/PaymentScreen/PaymentScreen";
+import PersonalInfoScreen from "../../screens/Profile/PersonalInfoScreen";
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -146,6 +149,16 @@ const Rootnavi = () => {
           name="SupportScreen"
           component={SupportScreen}
           options={{ title: "Hỗ trợ khách hàng" }}
+        />
+        <Stack.Screen
+          name="PaymentScreen"
+          component={PaymentScreen}
+          options={{ title: "Thanh toán" }}
+        />
+        <Stack.Screen
+          name="PersonalInfoScreen"
+          component={PersonalInfoScreen}
+          options={{ title: "Thông tin cá nhân" }}
         />
       </Stack.Navigator>
     </NavigationContainer>

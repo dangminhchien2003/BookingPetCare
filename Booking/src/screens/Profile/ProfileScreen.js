@@ -71,16 +71,15 @@ const ProfileScreen = () => {
 
           <Image
             source={{
-              uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWfPErtZFdVTSou4C-suTujw24ouJDZJ4Ljw&s",
+              uri: "https://www.pngpacks.com/uploads/data/657/IMG_PotlniwbKVKj.png",
             }}
             style={styles.profileImage}
           />
 
           <Text style={styles.name}>{user.tennguoidung}</Text>
-          <Text style={styles.label}>{user.email}</Text>
 
           <View style={styles.containerbutton}>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("PersonalInfoScreen")}>
               <Ionicons
                 name="person-outline"
                 size={20}
@@ -185,17 +184,9 @@ const styles = StyleSheet.create({
     marginTop: 25,
     color: "#FF9900",
     textAlign: "center",
+    marginBottom:20,
   },
-  label: {
-    fontSize: 12,
-    marginBottom: 20,
-    color: "#333",
-    textAlign: "center",
-    // backgroundColor: '#CCCCFF',
-    padding: 5,
-    borderRadius: 30,
-    borderWidth: 0.5,
-  },
+  
   loadingContainer: {
     flex: 1,
     justifyContent: "center",

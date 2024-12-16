@@ -1,4 +1,3 @@
-// src/App.js
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -17,6 +16,7 @@ import Promotions from "./View/Promotions/Promotions";
 import Profile from "./View/Profile/Profile";
 import ServiceCenter from "./View/Services_Center/ServiceCenter";
 import TopBar from "./components/Topbar/Topbar";
+import Payment from "./View/Payment/Payment";
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PersonIcon from "@mui/icons-material/Person";
@@ -24,7 +24,7 @@ import RoomServiceIcon from "@mui/icons-material/RoomService";
 import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
 import LoyaltyIcon from "@mui/icons-material/Loyalty";
 import EventNoteIcon from "@mui/icons-material/EventNote";
-import SettingsIcon from "@mui/icons-material/Settings";
+import PaymentIcon from "@mui/icons-material/Payment";
 import LogoutIcon from "@mui/icons-material/Logout";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 
@@ -75,18 +75,20 @@ function App() {
       icon: <EventNoteIcon />,
       link: "/bookings",
     },
+    
+    {
+      title: "Quản lý thanh toán",
+      text: "Thanh toán",
+      icon: <PaymentIcon />,
+      link: "/payment",
+    },
     {
       title: "Thông tin tài khoản",
       text: "Thông tin tài khoản",
-      icon: <SettingsIcon />,
+      icon: <PaymentIcon />,
       link: "/profile",
     },
-    {
-      title: "Đăng xuất",
-      text: "Đăng xuất",
-      icon: <LogoutIcon />,
-      link: "/login",
-    },
+    
   ];
   // Tạo một mảng Sidebar mà không có mục "Thông tin tài khoản"
   const sidebarItems = items.filter(
@@ -117,12 +119,10 @@ function App() {
                       <Route path="/users" element={<Users />} />
                       <Route path="/bookings" element={<Bookings />} />
                       <Route path="/center" element={<Center />} />
-                      <Route
-                        path="/ServiceCenter"
-                        element={<ServiceCenter />}
-                      />
+                      <Route path="/ServiceCenter" element={<ServiceCenter />}/>
                       <Route path="/promotions" element={<Promotions />} />
                       <Route path="/profile" element={<Profile />} />
+                      <Route path="/payment" element={<Payment />} />
                     </Routes>
                   </Box>
                 </div>

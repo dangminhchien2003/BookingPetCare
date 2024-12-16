@@ -108,3 +108,13 @@
   color: #555;  
   text-align: center;
 }
+.dashboard-chart-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.dashboard-chart-container > div {
+  flex: 1;
+}

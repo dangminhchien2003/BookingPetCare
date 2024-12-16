@@ -17,8 +17,8 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 import { useFocusEffect } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
-import moment from 'moment'; 
-import 'moment/locale/vi'; 
+import moment from "moment";
+import "moment/locale/vi";
 
 const BookingScreen = () => {
   const [centers, setCenters] = useState([]);
@@ -188,7 +188,7 @@ const BookingScreen = () => {
 
   // Hàm format ngày thành tiếng Việt
   const formatDate = (date) => {
-    return moment(date).format('dddd, D MMMM YYYY'); 
+    return moment(date).format("dddd, D MMMM YYYY");
   };
 
   return (
@@ -269,7 +269,7 @@ const BookingScreen = () => {
         style={styles.dateButton}
       >
         <Text style={styles.dateButtonText}>
-          Chọn ngày: {formatDate(selectedDate)} 
+          Chọn ngày: {formatDate(selectedDate)}
         </Text>
       </TouchableOpacity>
       {showDatePicker && (
@@ -280,7 +280,15 @@ const BookingScreen = () => {
           onChange={(event, date) => {
             setShowDatePicker(false);
             if (date) {
-              setSelectedDate(date);
+              const today = new Date();
+              // Đặt thời gian của ngày hiện tại về 00:00:00 để so sánh chính xác
+              today.setHours(0, 0, 0, 0);
+
+              if (date < today) {
+                Alert.alert("Lỗi", "Không thể chọn ngày trước ngày hiện tại.");
+              } else {
+                setSelectedDate(date);
+              }
             }
           }}
         />

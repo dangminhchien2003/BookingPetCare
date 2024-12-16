@@ -1,20 +1,40 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, Alert } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';  
-import url from '../../../ipconfig';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+  Alert,
+} from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import url from "../../../ipconfig";
 
 const SignUpScreen = ({ navigation }) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [address, setAddress] = useState('');
-  
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [address, setAddress] = useState("");
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSignUp = async () => {
+    // Kiểm tra định dạng email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Alert.alert("Lỗi", "Vui lòng nhập địa chỉ email hợp lệ.");
+      return;
+    }
+    // Kiểm tra độ dài mật khẩu
+    if (password.length < 6) {
+      Alert.alert("Lỗi", "Mật khẩu phải có ít nhất 6 ký tự.");
+      return;
+    }
     if (password !== confirmPassword) {
       Alert.alert("Lỗi", "Mật khẩu xác nhận không khớp.");
       return;
@@ -25,14 +45,14 @@ const SignUpScreen = ({ navigation }) => {
       email: email,
       matkhau: password,
       sodienthoai: phoneNumber,
-      diachi: address
+      diachi: address,
     };
 
     try {
       const response = await fetch(`${url}/api/dangky.php`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
@@ -41,7 +61,7 @@ const SignUpScreen = ({ navigation }) => {
 
       if (result.success) {
         Alert.alert("Thành công", result.message);
-        navigation.navigate('Login');
+        navigation.navigate("Login");
       } else {
         Alert.alert("Lỗi", result.message);
       }
@@ -54,8 +74,10 @@ const SignUpScreen = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.logoContainer}>
-        <Image 
-          source={{ uri: 'https://www.mdanderson.org/images/publications/cancerwise/Generics/Pet%20Owners%20and%20Cancer%20Treatment.jpg' }} 
+        <Image
+          source={{
+            uri: "https://www.mdanderson.org/images/publications/cancerwise/Generics/Pet%20Owners%20and%20Cancer%20Treatment.jpg",
+          }}
           style={styles.logo}
         />
         <Text style={styles.title}>Booking PetCare</Text>
@@ -93,7 +115,12 @@ const SignUpScreen = ({ navigation }) => {
           />
         </View>
         <View style={styles.inputWrapper}>
-          <Icon name="map-marker" size={20} color="#f9b233" style={styles.icon} />
+          <Icon
+            name="map-marker"
+            size={20}
+            color="#f9b233"
+            style={styles.icon}
+          />
           <TextInput
             style={styles.input}
             placeholder="Địa chỉ"
@@ -132,7 +159,9 @@ const SignUpScreen = ({ navigation }) => {
             onChangeText={setConfirmPassword}
             secureTextEntry={!showConfirmPassword}
           />
-          <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+          <TouchableOpacity
+            onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+          >
             <Icon
               name={showConfirmPassword ? "eye" : "eye-slash"}
               size={20}
@@ -147,8 +176,10 @@ const SignUpScreen = ({ navigation }) => {
         <Text style={styles.signUpButtonText}>Đăng ký</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.backToLoginText}>Đã có tài khoản? Đăng nhập ngay</Text>
+      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+        <Text style={styles.backToLoginText}>
+          Đã có tài khoản? Đăng nhập ngay
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -157,13 +188,13 @@ const SignUpScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f9f9f9',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f9f9f9",
     padding: 20,
   },
   logoContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 30,
   },
   logo: {
@@ -171,32 +202,32 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 60,
     borderWidth: 3,
-    borderColor: '#f9b233',
+    borderColor: "#f9b233",
     marginBottom: 20,
   },
   title: {
     fontSize: 30,
-    fontWeight: 'bold',
-    color: '#f9b233',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    fontWeight: "bold",
+    color: "#f9b233",
+    textShadowColor: "rgba(0, 0, 0, 0.3)",
     textShadowOffset: { width: 1, height: 2 },
     textShadowRadius: 4,
   },
   inputContainer: {
-    width: '100%',
+    width: "100%",
   },
   inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    backgroundColor: '#fff',
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    backgroundColor: "#fff",
     borderRadius: 12,
     paddingHorizontal: 15,
     marginBottom: 15,
     fontSize: 16,
     borderWidth: 1,
-    borderColor: '#ddd',
-    shadowColor: '#000',
+    borderColor: "#ddd",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
@@ -213,20 +244,20 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   signUpButton: {
-    backgroundColor: '#f9b233',
+    backgroundColor: "#f9b233",
     paddingVertical: 15,
     borderRadius: 10,
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
   },
   signUpButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   backToLoginText: {
     marginTop: 15,
-    color: '#f9b233',
+    color: "#f9b233",
     fontSize: 14,
   },
 });
